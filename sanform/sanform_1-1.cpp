@@ -1,6 +1,7 @@
 /**
-Sanform 1-1     MODIFIED FOR POWERLINES 2-3
+Sanform 1-1     MODIFIED FOR POWERLINES 2-2
 Copyright 2010-2014 Sandro Kalbermatter
+License: GPL v3
 Lib dependencies: SDL, SDL_Image, SDL_Text
 File dependencies: sanform_1-1.cpp , sanform_1-1.h , biondi.ttf
 
@@ -466,9 +467,9 @@ int sanform::refresh()
                 SDL_Color tempcolor;
                 if((m_color.r+m_color.g+m_color.b)/3>80)
                 {
-                    tempcolor.r=tempcolor.g=tempcolor.g=0;
+                    tempcolor.r=tempcolor.g=tempcolor.b=0;
                 }else{
-                    tempcolor.r=tempcolor.g=tempcolor.g=255;
+                    tempcolor.r=tempcolor.g=tempcolor.b=255;
                 }
                 if(m_font==NULL){fprintf(stderr,"Error: font biondi is not loaded!"); exit(EXIT_SUCCESS);}
                 m_surf[1]=TTF_RenderText_Blended(m_font,m_label.c_str(),tempcolor);
