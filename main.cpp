@@ -15,7 +15,7 @@
 
   CHANGELOG since 2-1:
    - Removed feature: Fullscreen
-   - Added feature: pauseAllowed
+   - Added feature: settings->get("pauseAllowed")
    - Main OS is now Linux
    - Removed any dependencies of SDL_draw
    - Code reforms:
@@ -37,33 +37,21 @@
 #include <cstdlib>
 #include <iostream>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
 #include <time.h>
 #include <math.h>
 
 #include "sanform/sanform_1-1.h"
+#include "settings.h"
 
 using namespace std;
-
-// User-defined Option globals
-bool pauseAllowed=false;
-bool showButtons=true;
-bool holesEnabled=true;
-bool powerupsEnabled=true;
-bool handicapsEnabled=false;
-bool bombsEnabled=true;
-bool teleportEnabled=true;
-int slipLevel=3;
-int gameDelay=30; // This is for da speed
-int amountRoundsInGame=10;
 
 // Internal global constants
 const int amountHandicaps=25; // Defines how many handicaps there will be on the screen
 const int keyPressDelay=200;  // When a human player presses both buttons, this is the maximum time distance (between keydowns) for powerups.
 // If more time passes by, a bomb / teleport will be released.
 const int prgw=739, prgh=555; // Window sizes, ratio 4:3
-const char* fileNameSettings="powerlines-settings"; // File name of /the settings file
 const int holeDelay=30; // Each holeDelay steps, a hole will be drawn. Must be >= 3
 const int holeSize=5; // Defines how long holes are (value in steps)
 const double turnSpeed=0.1; // This value will be added to the angle of each player at each step (if the player is rotating).
@@ -101,7 +89,7 @@ struct playerpts{ // Player score display convenience datastructure
 };
 
 // Functions
-int options(SDL_Surface *screen);
+int options(SDL_Surface *screen, Settings *settings);
 bool isClickInRect(SDL_Event event, int x0, int y0, int x1, int y1);
 int checkGo(Player* players);
 void myDrawFillRect(SDL_Surface *super,int x,int y, int w, int h, Uint32 color);
@@ -116,73 +104,19 @@ int main(int argc, char *argv[])
     // Init random generator
     srand(time(NULL));
 
-    // Read / Write settings
-    FILE *fSettings;
-    fSettings=fopen(fileNameSettings,"r");
-    if(fSettings){
-        // The settings file exists. Read it and apply settings.
-        char lineBuf[500];
-        bool readSuccess=true;
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&pauseAllowed) != 1){pauseAllowed=false;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(sscanf(lineBuf,"%i\t%*",&slipLevel) != 1 || slipLevel<1 || slipLevel >3){slipLevel=3;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&holesEnabled) != 1){holesEnabled=true;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(sscanf(lineBuf,"%i\t%*",&amountRoundsInGame) != 1){amountRoundsInGame=-1;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(sscanf(lineBuf,"%i\t%*",&gameDelay) != 1 || gameDelay<0){gameDelay=30;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&showButtons) != 1){showButtons=true;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&powerupsEnabled) != 1){powerupsEnabled=true;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&handicapsEnabled) != 1){handicapsEnabled=true;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&bombsEnabled) != 1){bombsEnabled=true;}
-        if(!fgets(lineBuf,500,fSettings)){readSuccess=false;}
-        else if(boolScanf(lineBuf,"%i\t%*",&teleportEnabled) != 1){teleportEnabled=true;}
-        if(!readSuccess){
-            fprintf(stderr,"WARNING: Corrupted settings file. Restoring to default.\n");
-            // Restore default settings file as the actual file is corrupted
-            fSettings=fopen(fileNameSettings,"w+");
-            if(fSettings){
-                fprintf(fSettings,"0\tPausing game: 1=allowed, 0=disallowed\n3\tSlipLevel (1-3), 1 means that you can pass easily through other lines, 3 = impossible to pass through lines\n1\tHoles in the lines: 1=active, 0=inactive\n-1\tNumber of rounds per game. 0 = Never-ending game, -1 = Decide after points\n30\tGame speed (std=30, more=slower, less=faster)\n1\tShow Buttons during the game: 1=yes 0=no\n1\tUse Powerups      1=yes   0=no\n0\tActivate handicaps       1=yes     0=no\n1\tActivate bombs       1=yes    0=no\n1\tActivate teleport       1=yes     0=no");
-            }else{
-                fprintf(stderr,"WARNING: Could not create settings file %s!\n",fileNameSettings);
-            }
-            pauseAllowed=0;
-            slipLevel=3;
-            holesEnabled=true;
-            amountRoundsInGame=-1;
-            gameDelay=30;
-            showButtons=true;
-            powerupsEnabled=true;
-            handicapsEnabled=false;
-            bombsEnabled=true;
-            teleportEnabled=true;
-        }
-    }else{
-        // No settings file found. Create one and set settings to default.
-        fSettings=fopen(fileNameSettings,"w+");
-        if(fSettings){
-            fprintf(fSettings,"0\tPausing game: 1=allowed, 0=disallowed\n3\tSlipLevel (1-3), 1 means that you can pass easily through other lines, 3 = impossible to pass through lines\n1\tHoles in the lines: 1=active, 0=inactive\n-1\tNumber of rounds per game. 0 = Never-ending game, -1 = Decide after points\n30\tGame speed (std=30, more=slower, less=faster)\n1\tShow Buttons during the game: 1=yes 0=no\n1\tUse Powerups      1=yes   0=no\n0\tActivate handicaps       1=yes     0=no\n1\tActivate bombs       1=yes    0=no\n1\tActivate teleport       1=yes     0=no");
-        }else{
-            fprintf(stderr,"WARNING: Could not create settings file %s!\n",fileNameSettings);
-        }
-        pauseAllowed=0;
-        slipLevel=3;
-        holesEnabled=true;
-        amountRoundsInGame=-1;
-        gameDelay=30;
-        showButtons=true;
-        powerupsEnabled=true;
-        handicapsEnabled=false;
-        bombsEnabled=true;
-        teleportEnabled=true;
-    }
-    fclose(fSettings);
+    // Init settings
+    Settings* settings=new Settings("powerlines-settings");
+    settings->addSetting("pauseAllowed", "Pausing game: 1=allowed, 0=disallowed",0);
+    settings->addSetting("slipLevel","SlipLevel (1-3), 1 means that you can pass easily through other lines, 3 = impossible to pass through lines",3);
+    settings->addSetting("holesEnabled","Holes in the lines: 1=active, 0=inactive",1);
+    settings->addSetting("amountRoundsInGame","Number of rounds per game. 0 = Never-ending game, -1 = Decide looking at the players' points",-1);
+    settings->addSetting("gameDelay","Game speed (default=30, more=slower, less=faster)",30);
+    settings->addSetting("showButtons","Show Buttons during the game: 1=yes 0=no",1);
+    settings->addSetting("powerupsEnabled","Enable Powerups: 1=yes   0=no",1);
+    settings->addSetting("handicapsEnabled","Enable Handicaps: 1=yes   0=no",0);
+    settings->addSetting("bombsEnabled","Enable Bombs: 1=yes   0=no",1);
+    settings->addSetting("teleportEnabled","Enable Teleport: 1=yes   0=no",1);
+    settings->load();
 
     // Declare program variables
     Player players[10]; // This table holds the player structure.
@@ -198,16 +132,16 @@ int main(int argc, char *argv[])
     TTF_Font *fontDigitLarge=NULL, *fontDigitSmall=NULL;
 
     // Player colors
-    players[0].color={255,   0,   0};
-    players[1].color={194, 112,   2};
-    players[2].color={255, 255,   0};
-    players[3].color={102, 255,  51};
-    players[4].color={  1, 103,  18};
-    players[5].color={112,  48, 160};
-    players[6].color={ 50,  55,  94};
-    players[7].color={  0,   0, 255};
-    players[8].color={  0, 255, 255};
-    players[9].color={255, 255, 255};
+    players[0].color={255,   0,   0,   0};
+    players[1].color={194, 112,   2,   0};
+    players[2].color={255, 255,   0,   0};
+    players[3].color={102, 255,  51,   0};
+    players[4].color={  1, 103,  18,   0};
+    players[5].color={112,  48, 160,   0};
+    players[6].color={ 50,  55,  94,   0};
+    players[7].color={  0,   0, 255,   0};
+    players[8].color={  0, 255, 255,   0};
+    players[9].color={255, 255, 255,   0};
     
     // Key codes for each player (except for p10 which is mouse)
     players[0].leftKeyCode=SDLK_1,         players[0].rightKeyCode=SDLK_q;
@@ -328,7 +262,7 @@ int main(int argc, char *argv[])
 
                             // Options-key
                         case SDLK_o:
-                            options(sScreen);
+                            options(sScreen,settings);
                         break;
 
                             // Go-key
@@ -337,6 +271,9 @@ int main(int argc, char *argv[])
                             if(checkGo(players)){go=true;}
                         }
                         break;
+
+                        default:
+                            break;
                     }
                 break;
 
@@ -357,13 +294,16 @@ int main(int argc, char *argv[])
                     if(isClickInRect(event, 370, 240, 700, 290)){ players[9].enabled = !players[9].enabled; }
 
                     // Other Buttons
-                    if(isClickInRect(event, 464, 344, 651, 414)){ options(sScreen); } // Options Button
+                    if(isClickInRect(event, 464, 344, 651, 414)){ options(sScreen,settings); } // Options Button
                     if(isClickInRect(event, 696, 0, 737, 38)){ quit=true; } // Exit Button
                     if(isClickInRect(event, 466, 423, 649, 487)) // Go-Button
                     {
                         if(checkGo(players)){go=true;}
                     }
                 break;
+
+                default:
+                    break;
             }
 
             // Draw that stuff
@@ -434,7 +374,7 @@ int main(int argc, char *argv[])
             }
 
             // Initialize and draw handicaps for this round
-            if(handicapsEnabled)
+            if(settings->get("handicapsEnabled"))
             {
                 int rMax,rMin,nrRand,maxX,minX,maxY,minY,x,y;
                 for(int i=0;i<amountHandicaps;i++)
@@ -498,7 +438,7 @@ int main(int argc, char *argv[])
             }
 
             // Draw the in-game buttons
-            if(showButtons){
+            if(settings->get("showButtons")){
                 SDL_BlitSurface(sQuitButton,NULL,sScreen,&rQuitButton);
                 SDL_BlitSurface(sPauseButton,NULL,sScreen,&rPauseButton);
                 SDL_BlitSurface(sPlayButton,NULL,sScreen,&rPlayButton);
@@ -530,8 +470,8 @@ int main(int argc, char *argv[])
                 players[i].powerup.available=true;
 
                 // Init bomb and teleport
-                if(bombsEnabled){players[i].bombAvail=true;}else{players[i].bombAvail=false;}
-                if(teleportEnabled){players[i].teleportAvail=true;}else{players[i].teleportAvail=false;}
+                if(settings->get("bombsEnabled")){players[i].bombAvail=true;}else{players[i].bombAvail=false;}
+                if(settings->get("teleportEnabled")){players[i].teleportAvail=true;}else{players[i].teleportAvail=false;}
 
                 // Force keys off
                 lpressed[i]=0;
@@ -597,7 +537,7 @@ int main(int argc, char *argv[])
 
                             case SDLK_SPACE:
                             {
-                                if(pauseAllowed){
+                                if(settings->get("pauseAllowed")){
                                     if(status==PAUSE){status=PLAY;}
                                     else if(status==PLAY){status=PAUSE;}
                                     SDL_Event tempevent;
@@ -611,6 +551,8 @@ int main(int argc, char *argv[])
                             }
                             break;
 
+                            default:
+                                break;
                         }
                     break;
 
@@ -618,11 +560,13 @@ int main(int argc, char *argv[])
                     {
                         //cout<<"GClick on "<<event.button.x<<"."<<event.button.y<<endl; // For debug only.
                         if((event.button.x>0)&&(event.button.x<50)&&(event.button.y>0)&&(event.button.y<80)){status=PLAY;}
-                        if((event.button.x>50)&&(event.button.x<100)&&(event.button.y>0)&&(event.button.y<80) && pauseAllowed){status=PAUSE;}
+                        if((event.button.x>50)&&(event.button.x<100)&&(event.button.y>0)&&(event.button.y<80) && settings->get("pauseAllowed")){status=PAUSE;}
                         if((event.button.x>100)&&(event.button.x<150)&&(event.button.y>0)&&(event.button.y<80)){status=STOP;}
                         if((event.button.x>prgw-50)&&(event.button.x<prgw)&&(event.button.y>0)&&(event.button.y<80)){quit=true;}
                     }
 
+                    default:
+                        break;
                 }
 
 
@@ -861,21 +805,21 @@ int main(int argc, char *argv[])
                             Uint32 currentColor=SDL_MapRGB(sScreen->format,players[i].color.r,players[i].color.g,players[i].color.b);
                             
                             // Draw player's head
-                            myDrawFillRect(sScreen, players[i].pos.x-int(slipLevel/2), players[i].pos.y-int(slipLevel/2),slipLevel,slipLevel,currentColor);
+                            myDrawFillRect(sScreen, players[i].pos.x-int(settings->get("slipLevel")/2), players[i].pos.y-int(settings->get("slipLevel")/2),settings->get("slipLevel"),settings->get("slipLevel"),currentColor);
 
                             // Register player's new position to evilPixels
                             evilPixels[players[i].pos.x][players[i].pos.y]=true;
-                            if(slipLevel>2){evilPixels[players[i].pos.x-1][players[i].pos.y]=true;}
-                            if(slipLevel>2){evilPixels[players[i].pos.x][players[i].pos.y-1]=true;}
-                            if(slipLevel>2){evilPixels[players[i].pos.x-1][players[i].pos.y-1]=true;}
-                            if(slipLevel>1){evilPixels[players[i].pos.x+1][players[i].pos.y]=true;}
-                            if(slipLevel>1){evilPixels[players[i].pos.x][players[i].pos.y+1]=true;}
-                            if(slipLevel>1){evilPixels[players[i].pos.x+1][players[i].pos.y+1]=true;}
-                            if(slipLevel>2){evilPixels[players[i].pos.x-1][players[i].pos.y+1]=true;}
-                            if(slipLevel>2){evilPixels[players[i].pos.x+1][players[i].pos.y-1]=true;}
+                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y]=true;}
+                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x][players[i].pos.y-1]=true;}
+                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y-1]=true;}
+                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x+1][players[i].pos.y]=true;}
+                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x][players[i].pos.y+1]=true;}
+                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x+1][players[i].pos.y+1]=true;}
+                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y+1]=true;}
+                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x+1][players[i].pos.y-1]=true;}
 
                             // Draw player's powerup
-                            if(players[i].powerup.running && powerupsEnabled){
+                            if(players[i].powerup.running && settings->get("powerupsEnabled")){
                                 // Draw first arm and register to evilPixels
                                 myDrawFillRect(sScreen, players[i].powerup.pos[0].x-2, players[i].powerup.pos[0].y-1,3,2,currentColor);
                                 evilPixels[players[i].powerup.pos[0].x-2][players[i].powerup.pos[0].y-1]=true;
@@ -896,7 +840,7 @@ int main(int argc, char *argv[])
                             }
                             
                             // Code for the creation of the holes
-                            if(holesEnabled){
+                            if(settings->get("holesEnabled")){
                                 // If we are currently at a pos where a hole will be drawn, register current pos to holeBackupPos
                                 if(stepsSinceLastHole<holeSize){
                                     holeBackupPos[i][stepsSinceLastHole]=players[i].pos;
@@ -905,16 +849,16 @@ int main(int argc, char *argv[])
                                 // If we are 3 steps away from the hole that will be drawn next, draw it
                                 if(stepsSinceLastHole>=(holeSize+3)){
                                     for(int j=0;j<holeSize;j++){
-                                        myDrawFillRect(sScreen, holeBackupPos[i][j].x-int(slipLevel/2), holeBackupPos[i][j].y-int(slipLevel/2),slipLevel,slipLevel,SDL_MapRGB(sScreen->format,0,0,0));
+                                        myDrawFillRect(sScreen, holeBackupPos[i][j].x-int(settings->get("slipLevel")/2), holeBackupPos[i][j].y-int(settings->get("slipLevel")/2),settings->get("slipLevel"),settings->get("slipLevel"),SDL_MapRGB(sScreen->format,0,0,0));
                                         evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y]=false;
-                                        if(slipLevel>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y]=false;}
-                                        if(slipLevel>2){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y-1]=false;}
-                                        if(slipLevel>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y-1]=false;}
-                                        if(slipLevel>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y]=false;}
-                                        if(slipLevel>1){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y+1]=false;}
-                                        if(slipLevel>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y+1]=false;}
-                                        if(slipLevel>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y+1]=false;}
-                                        if(slipLevel>2){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y-1]=false;}
+                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y]=false;}
+                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y-1]=false;}
+                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y-1]=false;}
+                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y]=false;}
+                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y+1]=false;}
+                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y+1]=false;}
+                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y+1]=false;}
+                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y-1]=false;}
                                     }
                                 }
 
@@ -936,7 +880,7 @@ int main(int argc, char *argv[])
 
                 // Now, wait a moment to slow the game down
                 // TODO: Measure the actually used time in order to guarantee fixed FPS
-                SDL_Delay(gameDelay);
+                SDL_Delay(settings->get("gameDelay"));
             }
 
             ////////////////////////////////////////////////////  END OF ROUND ///////////////////////////////////////////////////////////
@@ -985,7 +929,7 @@ int main(int argc, char *argv[])
 
                 // Display footer message (if user termination criteria is reached, already show that we're done)
                 // TODO: The behaviour described in () above makes not much sence
-                if((amountRoundsInGame>0)&&(currentRound+1>=amountRoundsInGame)){sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0].color);}
+                if((settings->get("amountRoundsInGame")>0)&&(currentRound+1>=settings->get("amountRoundsInGame"))){sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0].color);}
                 else{sFont=TTF_RenderText_Blended(fontDigitSmall,"Press Space...",players[9].color);}
                 rFont.y=515;
                 SDL_BlitSurface(sFont,NULL,sScreen,&rFont);
@@ -1013,8 +957,8 @@ int main(int argc, char *argv[])
             }
 
             bool gameOver=false;
-            if(amountRoundsInGame==-1){if(bestScore>=10*(amountActivePlayers-1)){gameOver=true;}} // termination criteria set to auto
-            else if((amountRoundsInGame>0)&&(currentRound>=amountRoundsInGame)){gameOver=true;} // user set termination citeria
+            if(settings->get("amountRoundsInGame")==-1){if(bestScore>=10*(amountActivePlayers-1)){gameOver=true;}} // termination criteria set to auto
+            else if((settings->get("amountRoundsInGame")>0)&&(currentRound>=settings->get("amountRoundsInGame"))){gameOver=true;} // user set termination citeria
 
             ///////////////////////////////////////////////// GAME OVER //////////////////////////////////////////////////////////
 
@@ -1105,6 +1049,8 @@ leaveNow:
     
     TTF_Quit();
     SDL_Quit();
+
+    delete settings;
     
     return EXIT_SUCCESS;
 }
@@ -1112,7 +1058,7 @@ leaveNow:
 
 
 
-int options(SDL_Surface *screen)
+int options(SDL_Surface *screen, Settings* settings)
 {
     /// This is a function that displays the option menu.
     // And no, that's not elegant programming. I might change this if I'm up to it one day...
@@ -1186,7 +1132,7 @@ int options(SDL_Surface *screen)
     lbombs.label("activate bombs");
     lteleport.label("activate teleport");
     lspeed.label("speed (depending on your computer)");
-    lsliplevel.label("sliplevel (chance to pass through lines)");
+    lsliplevel.label("SlipLevel (chance to pass through lines)");
     
     kok.label("ok");
     kcancel.label("cancel");
@@ -1202,18 +1148,18 @@ int options(SDL_Surface *screen)
     kcancel.color(150,0,0);
     kreset.color(0,0,150);
 
-    if(pauseAllowed){kpause.value(1);}else{kpause.value(0);}
-    if(showButtons){kbuttons.value(1);}else{kbuttons.value(0);}
-    if(holesEnabled){kholes.value(1);}else{kholes.value(0);}
-    if(powerupsEnabled){kpowerups.value(1);}else{kpowerups.value(0);}
-    if(handicapsEnabled){khandicaps.value(1);}else{khandicaps.value(0);}
-    if(bombsEnabled){kbombs.value(1);}else{kbombs.value(0);}
-    if(teleportEnabled){kteleport.value(1);}else{kteleport.value(0);}
+    if(settings->get("pauseAllowed")){kpause.value(1);}else{kpause.value(0);}
+    if(settings->get("showButtons")){kbuttons.value(1);}else{kbuttons.value(0);}
+    if(settings->get("holesEnabled")){kholes.value(1);}else{kholes.value(0);}
+    if(settings->get("powerupsEnabled")){kpowerups.value(1);}else{kpowerups.value(0);}
+    if(settings->get("handicapsEnabled")){khandicaps.value(1);}else{khandicaps.value(0);}
+    if(settings->get("bombsEnabled")){kbombs.value(1);}else{kbombs.value(0);}
+    if(settings->get("teleportEnabled")){kteleport.value(1);}else{kteleport.value(0);}
     
-    kspeed.value(99-gameDelay);
+    kspeed.value(99-settings->get("gameDelay"));
     kspeed.refresh();
     
-    ksliplevel.value(3-slipLevel);
+    ksliplevel.value(3-settings->get("slipLevel"));
     ksliplevel.refresh();
     
     SDL_BlitSurface(soptions,NULL,screen,NULL);
@@ -1288,8 +1234,14 @@ int options(SDL_Surface *screen)
                     case SDLK_r:
                         reset=true;
                     break;
+
+                    default:
+                        break;
                 }
             }// end Keydown
+
+            default:
+                break;
         }// end switch
 
         if(kok.isClicked()){ok=true;}
@@ -1297,34 +1249,18 @@ int options(SDL_Surface *screen)
         if(kreset.isClicked()){reset=true;}
 
         if(ok){
-            pauseAllowed=kpause.value();
-            showButtons=kbuttons.value();
-            holesEnabled=kholes.value();
-            handicapsEnabled=khandicaps.value();
-            bombsEnabled=kbombs.value();
-            teleportEnabled=kteleport.value();
-            powerupsEnabled=kpowerups.value();
+            settings->set("pauseAllowed",kpause.value());
+            settings->set("showButtons",kbuttons.value());
+            settings->set("holesEnabled",kholes.value());
+            settings->set("handicapsEnabled",khandicaps.value());
+            settings->set("bombsEnabled",kbombs.value());
+            settings->set("teleportEnabled",kteleport.value());
+            settings->set("powerupsEnabled",kpowerups.value());
 
-            gameDelay=99-kspeed.value();
-            slipLevel=3-ksliplevel.value();
+            settings->set("gameDelay",99-kspeed.value());
+            settings->set("slipLevel",3-ksliplevel.value());
 
-            FILE *fSettings;
-            fSettings=fopen(fileNameSettings,"w+");
-            if(fSettings){
-                if(pauseAllowed){fprintf(fSettings,"1\tPausing game: 1=allowed, 0=disallowed\n");}else{fprintf(fSettings,"0\tPausing game: 1=allowed, 0=disallowed\n");}
-                fprintf(fSettings,"%i\tSlipLevel (1-3), 1 means that you can pass easily through other lines, 3 = impossible to pass through lines\n",slipLevel);
-                if(holesEnabled){fprintf(fSettings,"1\tHoles in the lines: 1=active, 0=inactive\n");}else{fprintf(fSettings,"0\tHoles in the lines: 1=active, 0=inactive\n");}
-                fprintf(fSettings,"%i\tNumber of rounds per game. 0 = Never-ending game, -1 = Decide after points\n",amountRoundsInGame);
-                fprintf(fSettings,"%i\tGame speed (std=30, more=slower, less=faster)\n",gameDelay);
-                if(showButtons){fprintf(fSettings,"1\tShow Buttons during the game: 1=yes 0=no");}else{fprintf(fSettings,"0\tShow Buttons during the game: 1=yes 0=no");}
-                if(powerupsEnabled){fprintf(fSettings,"\n1\tUse Powerups      1=yes   0=no\n");}else{fprintf(fSettings,"\n0\tUse Powerups      1=yes   0=no\n");}
-                if(handicapsEnabled){fprintf(fSettings,"1\tActivate handicaps       1=yes     0=no");}else{fprintf(fSettings,"0\tActivate handicaps       1=yes     0=no");}
-                if(bombsEnabled){fprintf(fSettings,"\n1\tActivate bombs       1=yes    0=no\n");}else{fprintf(fSettings,"\n0\tActivate bombs       1=yes    0=no\n");}
-                if(teleportEnabled){fprintf(fSettings,"1\tActivate teleport       1=yes     0=no");}else{fprintf(fSettings,"0\tActivate teleport       1=yes     0=no");}
-                fclose(fSettings);
-            }else{
-                fprintf(stderr,"WARNING: Could not create settings file %s!\n",fileNameSettings);
-            }
+            settings->save();
         }
 
         if(reset){

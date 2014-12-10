@@ -15,7 +15,7 @@ Still, this set of functions (it's supposed to be something like a library) is v
 #include <cstring>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL_ttf.h>
 
                                                     
 enum{                                               
