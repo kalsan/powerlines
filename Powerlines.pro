@@ -5,14 +5,20 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     sanform/sanform_1-1.cpp \
-    settings.cpp
+    settings.cpp \
+    player.cpp \
+    powerup.cpp \
+    gamescreen.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
 
 HEADERS += \
     sanform/sanform_1-1.h \
-    settings.h
+    settings.h \
+    player.h \
+    powerup.h \
+    gamescreen.h
 
 QMAKE_CXXFLAGS += -std=gnu++11
 

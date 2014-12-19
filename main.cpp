@@ -3,7 +3,7 @@
   Copyright 2009-2014 Sandro Kalbermatter
 
   LICENSE:
-  This program is licenced under GPL v3.0     TODO: Link goes here
+  This program is licenced under GPL v3.0, see http://www.gnu.org/licenses/gpl-3.0
   It comes with absolutely no warranty.
 
   NOTE:
@@ -18,6 +18,8 @@
    - Added feature: settings->get("pauseAllowed")
    - Main OS is now Linux
    - Removed any dependencies of SDL_draw
+   - Moved position registration in front of collision detection.
+     As a consequence, it will not be possible to cross each other on the same pixel any more, even with great timing.
    - Code reforms:
    -- renaming diverse symbols
    -- code reordering
@@ -31,6 +33,15 @@
    -- new function myDrawFillRect which works like drawFillRect but seems to be faster
    -- removed sanstring dependency
    -- settings now read using sscanf
+   -- replaced struct Player by class Player (wich has nothing to do with the really old class)
+   -- integrated lpressed and rpressed into Player
+   -- replaced struct Powerup by class Powerup
+   -- created a class for drawing and collision recognition: GameScreen, contains and replaces evilPixels
+   -- transformed playerpts into something readable
+
+   TODOs: Many things, in particular:
+   - class Powerup is only provisory at the moment. Implement this class.
+
    **/
 
 
@@ -44,6 +55,8 @@
 
 #include "sanform/sanform_1-1.h"
 #include "settings.h"
+#include "player.h"
+#include "gamescreen.h"
 
 using namespace std;
 
@@ -58,44 +71,29 @@ const double turnSpeed=0.1; // This value will be added to the angle of each pla
 const double stepSize=3; // Line head will advance by stepSize pixels at each step.
 const int bombMaxSize=150,bombMinSize=60;
 
-struct Powerup
-{   // Note: Powerups automatically thake the color of their player.
-    bool running; // I the powerup currently being drawn on screen (until it touches the wall)?
-    bool available; // May the player use the powerup?
-    SDL_Rect pos[2]; // Position of the 2 heads of the powerup (on the screen, rounded)
-    double angle[2]; // Angles of the 2 heads
-    double xDouble[2]; // real x-position of the 2 heads
-    double yDouble[2]; // real y-position of the 2 heads
-};
-
-typedef struct Player{
-    bool enabled; // does the player exist in the game?
-    bool alive; // is the player alive this round?
-    int pts; // How many points did the player collect in this game?
-    SDL_Color color; // Color of the player's line
-    double xDouble,yDouble; // Current real position of the head of the line
-    SDL_Rect pos; // Current position on screen of the head of the line (rounded to closest pixel)
-    double angle; // What direction is the player's line currently facing?
-    bool bombAvail; // Does the player have the right to use the bomb now?
-    bool teleportAvail; // Does the player have the right to use teleport now?
-    struct Powerup powerup;
-    int leftKeyCode, rightKeyCode; // This holds the keymap
-} Player;
-
-struct playerpts{ // Player score display convenience datastructure
+typedef struct Playerpts{ // Player score display convenience datastructure
     int pts;
-    int nr;
+    int id;
     bool enabled;
-};
+    bool operator() (const Playerpts &el1, const Playerpts &el2) { // This makes sorting really easy
+        if(!el1.enabled){
+            return false;
+        }
+        if(!el2.enabled){
+            return true;
+        }
+        return el1.pts > el2.pts;
+    }
+} Playerpts;
 
 // Functions
 int options(SDL_Surface *screen, Settings *settings);
 bool isClickInRect(SDL_Event event, int x0, int y0, int x1, int y1);
-int checkGo(Player* players);
+int checkGo(Player **players);
 void myDrawFillRect(SDL_Surface *super,int x,int y, int w, int h, Uint32 color);
 int boolScanf(const char* instring, const char* format, bool* target);
 
-int main(int argc, char *argv[])
+int main()
 {
     // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
@@ -119,10 +117,11 @@ int main(int argc, char *argv[])
     settings->load();
 
     // Declare program variables
-    Player players[10]; // This table holds the player structure.
-    struct playerpts ppts[10]; // This table holds the player's points at the end of the rounds (TODO: entire pts system sould be reworked)
-    int lpressed[10],rpressed[10];  // These tables store what key is pressed for each player, int=SDL_GetTicks()
-    // TODO: Integrate lpressed and rpressed into players[]
+    Player* players[10]; // This table holds the player structure.
+    for(int i=0;i<10;i++){
+        players[i]=new Player(holeSize,holeDelay);
+    }
+    Playerpts ppts[10]; // This table holds the player's points at the end of the rounds
 
     // SDL general variables
     SDL_Surface *sScreen,*sWelcomeScreen,*sIntroScreen,*sExitScreen,*sPlayerSelect,*sTick,*sFont;
@@ -132,37 +131,28 @@ int main(int argc, char *argv[])
     TTF_Font *fontDigitLarge=NULL, *fontDigitSmall=NULL;
 
     // Player colors
-    players[0].color={255,   0,   0,   0};
-    players[1].color={194, 112,   2,   0};
-    players[2].color={255, 255,   0,   0};
-    players[3].color={102, 255,  51,   0};
-    players[4].color={  1, 103,  18,   0};
-    players[5].color={112,  48, 160,   0};
-    players[6].color={ 50,  55,  94,   0};
-    players[7].color={  0,   0, 255,   0};
-    players[8].color={  0, 255, 255,   0};
-    players[9].color={255, 255, 255,   0};
+    players[0]->setColor({255,   0,   0,   0});
+    players[1]->setColor({194, 112,   2,   0});
+    players[2]->setColor({255, 255,   0,   0});
+    players[3]->setColor({102, 255,  51,   0});
+    players[4]->setColor({  1, 103,  18,   0});
+    players[5]->setColor({112,  48, 160,   0});
+    players[6]->setColor({ 50,  55,  94,   0});
+    players[7]->setColor({  0,   0, 255,   0});
+    players[8]->setColor({  0, 255, 255,   0});
+    players[9]->setColor({255, 255, 255,   0});
     
     // Key codes for each player (except for p10 which is mouse)
-    players[0].leftKeyCode=SDLK_1,         players[0].rightKeyCode=SDLK_q;
-    players[1].leftKeyCode=SDLK_s,         players[1].rightKeyCode=SDLK_x;
-    players[2].leftKeyCode=SDLK_r,         players[2].rightKeyCode=SDLK_t;
-    players[3].leftKeyCode=SDLK_c,         players[3].rightKeyCode=SDLK_v;
-    players[4].leftKeyCode=SDLK_u,         players[4].rightKeyCode=SDLK_i;
-    players[5].leftKeyCode=SDLK_n,         players[5].rightKeyCode=SDLK_m;
-    players[6].leftKeyCode=SDLK_LEFT,      players[6].rightKeyCode=SDLK_UP;
-    players[7].leftKeyCode=SDLK_l,         players[7].rightKeyCode=SDLK_p;
-    players[8].leftKeyCode=SDLK_KP_DIVIDE, players[8].rightKeyCode=SDLK_KP_MULTIPLY;
-    players[9].leftKeyCode=0,              players[9].rightKeyCode=0; // This is special because player 10 is controlled by mouse.
-
-    // Init evilPixels
-    // If the head of a player touches an evil pixel, he will die.
-    bool evilPixels[prgw][prgh];
-    for(int i=0;i<prgw;i++){
-        for(int j=0;j<prgh;j++){
-            evilPixels[i][j]=false;
-        }
-    }
+    players[0]->setLeftKeyCode(SDLK_1),         players[0]->setRightKeyCode(SDLK_q);
+    players[1]->setLeftKeyCode(SDLK_s),         players[1]->setRightKeyCode(SDLK_x);
+    players[2]->setLeftKeyCode(SDLK_r),         players[2]->setRightKeyCode(SDLK_t);
+    players[3]->setLeftKeyCode(SDLK_c),         players[3]->setRightKeyCode(SDLK_v);
+    players[4]->setLeftKeyCode(SDLK_u),         players[4]->setRightKeyCode(SDLK_i);
+    players[5]->setLeftKeyCode(SDLK_n),         players[5]->setRightKeyCode(SDLK_m);
+    players[6]->setLeftKeyCode(SDLK_LEFT),      players[6]->setRightKeyCode(SDLK_UP);
+    players[7]->setLeftKeyCode(SDLK_l),         players[7]->setRightKeyCode(SDLK_p);
+    players[8]->setLeftKeyCode(SDLK_KP_DIVIDE), players[8]->setRightKeyCode(SDLK_KP_MULTIPLY);
+    players[9]->setLeftKeyCode(0),              players[9]->setRightKeyCode(0); // This is special because player 10 is controlled by mouse.
 
     // ---------------------------------------- GET WINDOW STARTED! ------------------------------------
 
@@ -176,6 +166,7 @@ int main(int argc, char *argv[])
     SDL_WM_SetCaption(prgname,NULL);
     SDL_WM_SetIcon(SDL_LoadBMP("images/logoklein.bmp"),NULL);
     SDL_FillRect(sScreen,NULL,SDL_MapRGB(sScreen->format,0,0,0));
+    GameScreen* gameScreen=new GameScreen(sScreen,prgw,prgh);
     
     // Load and blit Welcome Screen
     rWelcomeScreen.x=0; rWelcomeScreen.y=0;
@@ -232,10 +223,10 @@ int main(int argc, char *argv[])
                 case SDL_KEYDOWN:
                     // Enable- / Disable-keys
                     for(int i=0;i<9;i++){ // Player 10 is special as it has the mouse.
-                        if(event.key.keysym.sym==players[i].leftKeyCode){
-                            players[i].enabled=true;
-                        }else if(event.key.keysym.sym==players[i].rightKeyCode){
-                            players[i].enabled=false;
+                        if(event.key.keysym.sym==players[i]->getLeftKeyCode()){
+                            players[i]->enable();
+                        }else if(event.key.keysym.sym==players[i]->getRightKeyCode()){
+                            players[i]->disable();
                         }
                     }
 
@@ -249,13 +240,13 @@ int main(int argc, char *argv[])
 
                             // All-Players-key
                         case SDLK_a:
-                            if(!players[0].enabled){
+                            if(!players[0]->isEnabled()){
                                 for(int i=0;i<10;i++){
-                                    players[i].enabled=true;
+                                    players[i]->enable();
                                 }
                             }else{
                                 for(int i=0;i<10;i++){
-                                    players[i].enabled=false;
+                                    players[i]->disable();
                                 }
                             }
                         break;
@@ -273,7 +264,7 @@ int main(int argc, char *argv[])
                         break;
 
                         default:
-                            break;
+                        break;
                     }
                 break;
 
@@ -282,16 +273,16 @@ int main(int argc, char *argv[])
                     // cout<<"Click on "<<event.button.x<<"."<<event.button.y<<endl;
 
                     // Player enable / disable
-                    if(isClickInRect(event,  20,  30, 330,  80)){ players[0].enabled = !players[0].enabled; }
-                    if(isClickInRect(event,  20,  80, 330, 140)){ players[1].enabled = !players[1].enabled; }
-                    if(isClickInRect(event,  20, 140, 330, 190)){ players[2].enabled = !players[2].enabled; }
-                    if(isClickInRect(event,  20, 190, 330, 240)){ players[3].enabled = !players[3].enabled; }
-                    if(isClickInRect(event,  20, 240, 330, 290)){ players[4].enabled = !players[4].enabled; }
-                    if(isClickInRect(event, 370,  30, 700,  80)){ players[5].enabled = !players[5].enabled; }
-                    if(isClickInRect(event, 370,  80, 700, 140)){ players[6].enabled = !players[6].enabled; }
-                    if(isClickInRect(event, 370, 140, 700, 190)){ players[7].enabled = !players[7].enabled; }
-                    if(isClickInRect(event, 370, 190, 700, 240)){ players[8].enabled = !players[8].enabled; }
-                    if(isClickInRect(event, 370, 240, 700, 290)){ players[9].enabled = !players[9].enabled; }
+                    if(isClickInRect(event,  20,  30, 330,  80)){ players[0]->toggleEnabled(); }
+                    if(isClickInRect(event,  20,  80, 330, 140)){ players[1]->toggleEnabled(); }
+                    if(isClickInRect(event,  20, 140, 330, 190)){ players[2]->toggleEnabled(); }
+                    if(isClickInRect(event,  20, 190, 330, 240)){ players[3]->toggleEnabled(); }
+                    if(isClickInRect(event,  20, 240, 330, 290)){ players[4]->toggleEnabled(); }
+                    if(isClickInRect(event, 370,  30, 700,  80)){ players[5]->toggleEnabled(); }
+                    if(isClickInRect(event, 370,  80, 700, 140)){ players[6]->toggleEnabled(); }
+                    if(isClickInRect(event, 370, 140, 700, 190)){ players[7]->toggleEnabled(); }
+                    if(isClickInRect(event, 370, 190, 700, 240)){ players[8]->toggleEnabled(); }
+                    if(isClickInRect(event, 370, 240, 700, 290)){ players[9]->toggleEnabled(); }
 
                     // Other Buttons
                     if(isClickInRect(event, 464, 344, 651, 414)){ options(sScreen,settings); } // Options Button
@@ -303,21 +294,21 @@ int main(int argc, char *argv[])
                 break;
 
                 default:
-                    break;
+                break;
             }
 
             // Draw that stuff
             SDL_BlitSurface(sPlayerSelect,NULL,sScreen,&rPlayerSelect);
-            if(players[0].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick1);}
-            if(players[1].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick2);}
-            if(players[2].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick3);}
-            if(players[3].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick4);}
-            if(players[4].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick5);}
-            if(players[5].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick6);}
-            if(players[6].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick7);}
-            if(players[7].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick8);}
-            if(players[8].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick9);}
-            if(players[9].enabled){SDL_BlitSurface(sTick,NULL,sScreen,&rTick10);}
+            if(players[0]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick1);}
+            if(players[1]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick2);}
+            if(players[2]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick3);}
+            if(players[3]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick4);}
+            if(players[4]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick5);}
+            if(players[5]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick6);}
+            if(players[6]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick7);}
+            if(players[7]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick8);}
+            if(players[8]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick9);}
+            if(players[9]->isEnabled()){SDL_BlitSurface(sTick,NULL,sScreen,&rTick10);}
             SDL_Flip(sScreen);
 
             // Save a few CPU cycles
@@ -353,7 +344,7 @@ int main(int argc, char *argv[])
         int status; // This will take one of the 3 values of the enum above
 
         for(int i=0;i<10;i++){ // Set all points to zero
-            players[i].pts=0;
+            players[i]->resetPts();
         }
         int currentRound=0; // This counts how many rounds we have had so far
         
@@ -361,17 +352,8 @@ int main(int argc, char *argv[])
 
         while(go&&!quit){
             // Initial drawing
-            SDL_FillRect(sScreen,NULL,SDL_MapRGB(sScreen->format,255,0,0)); // Draw red frame
-            myDrawFillRect(sScreen, 10, 10, prgw-20, prgh-20, SDL_MapRGB(sScreen->format,0,0,0)); // Paint rest of the screen black
-
-            // Set all evilPixels to "harmless"
-            for(int i=0;i<prgw;i++)
-            {
-                for(int j=0;j<prgh;j++)
-                {
-                    evilPixels[i][j]=false;
-                }
-            }
+            gameScreen->fillRect(0,0,prgw,prgh,SDL_MapRGB(sScreen->format,255,0,0)); // Draw red frame
+            gameScreen->clearRect(10, 10, prgw-20, prgh-20); // Paint rest of the screen black
 
             // Initialize and draw handicaps for this round
             if(settings->get("handicapsEnabled"))
@@ -422,16 +404,7 @@ int main(int argc, char *argv[])
                     y=(rand()%(maxY-minY+1))+minY;
 
                     // Now, draw the grey square representing the handicap
-                    myDrawFillRect(sScreen,x,y,15,15,SDL_MapRGB(sScreen->format,200,200,200));
-
-                    // Register the handicap into evilPixels
-                    for(int j=0;j<15;j++)
-                    {
-                        for(int k=0;k<15;k++)
-                        {
-                            evilPixels[x+j][y+k]=true;
-                        }
-                    }
+                    gameScreen->fillRect(x,y,15,15,SDL_MapRGB(sScreen->format,200,200,200));
 
                 } // We're done initializing the handicaps
 
@@ -448,62 +421,19 @@ int main(int argc, char *argv[])
             SDL_Flip(sScreen);
 
             // Determine the start position of each player
-            SDL_Rect tempRect;
-            int MAX=prgw-100,MIN=100;
             for(int i=0;i<10;i++){
-                // Random coordinates
-                tempRect.x= (rand() % (MAX - MIN + 1)) + MIN;
-                MAX=(prgh-100),MIN=100;
-                tempRect.y= (rand() % (MAX - MIN + 1)) + MIN;
-                players[i].pos=tempRect;
-                players[i].xDouble=tempRect.x;
-                players[i].yDouble=tempRect.y;
-
-                // Random start angle
-                players[i].angle=rand()%361;
-
-                // Resurrection of the player
-                players[i].alive=true;
-
-                // Init powerup
-                players[i].powerup.running=false;
-                players[i].powerup.available=true;
-
-                // Init bomb and teleport
-                if(settings->get("bombsEnabled")){players[i].bombAvail=true;}else{players[i].bombAvail=false;}
-                if(settings->get("teleportEnabled")){players[i].teleportAvail=true;}else{players[i].teleportAvail=false;}
-
-                // Force keys off
-                lpressed[i]=0;
-                rpressed[i]=0;
-            } // Done initializing players
+                players[i]->initRound(prgw,prgh,settings);
+            }
 
             // Display the players' birth
-            Uint32 color;
             for(int i=0;i<10;i++){
-                if(players[i].enabled){
-                    color=SDL_MapRGB(sScreen->format,players[i].color.r,players[i].color.g,players[i].color.b);
-                    myDrawFillRect(sScreen, players[i].pos.x-1, players[i].pos.y-1,3,3, color);
-                    SDL_Flip(sScreen);
-                    SDL_Delay(200);
-                }
+                players[i]->drawBirth(sScreen,settings->get("slipLevel"));
             }
 
             // Wait a second for the humans to get ready
             SDL_Delay(1000);
 
             // Init round
-            int stepsSinceLastHole=0; // Ring that wraps every time a hole is drawn
-            SDL_Rect holeBackupPos[10][holeSize]; // This will save each pixel where a hole will need to be drawn
-            for(int i=0;i<10;i++)
-            {
-                for(int j=0;j<holeSize;j++)
-                {
-                    holeBackupPos[i][j].x=0;
-                    holeBackupPos[i][j].y=0;
-                }
-            }
-
             bool roundEnabled=true; // When this becomes false, the round will stop!
 
             SDL_EnableKeyRepeat(1,1);
@@ -552,7 +482,7 @@ int main(int argc, char *argv[])
                             break;
 
                             default:
-                                break;
+                            break;
                         }
                     break;
 
@@ -564,307 +494,55 @@ int main(int argc, char *argv[])
                         if((event.button.x>100)&&(event.button.x<150)&&(event.button.y>0)&&(event.button.y<80)){status=STOP;}
                         if((event.button.x>prgw-50)&&(event.button.x<prgw)&&(event.button.y>0)&&(event.button.y<80)){quit=true;}
                     }
+                    break;
 
                     default:
-                        break;
+                    break;
                 }
 
-
-
-
-
                 // Check status to know if we are stopped
-                if(status==STOP){go=false;} // TODO: Would be nice to have go and status combined
+                if(status==STOP){
+                    go=false;
+                } // TODO: Would be nice to have go and status combined
 
                 // If we are not paused, get the keystate
-                if(status==PLAY)
-                {
+                if(status==PLAY){
                     // Analyze keystate and react to it
                     Uint8 *keystate=SDL_GetKeyState(NULL);
-
-                    for(int i=0;i<9;i++){
-                        if(!(abs(rpressed[i]-lpressed[i])>keyPressDelay) && (keystate[players[i].leftKeyCode]) && (keystate[players[i].rightKeyCode]) && players[i].powerup.available){
-                            // Release a powerup!
-                            players[i].powerup.available=false;
-                            players[i].powerup.running=true;
-                            players[i].powerup.angle[0]=players[i].angle-90;
-                            players[i].powerup.angle[1]=players[i].angle+90;
-                            players[i].powerup.pos[0]=players[i].pos;
-                            players[i].powerup.pos[1]=players[i].pos;
-                            players[i].powerup.xDouble[0]=players[i].powerup.xDouble[1]=players[i].pos.x;
-                            players[i].powerup.yDouble[0]=players[i].powerup.yDouble[1]=players[i].pos.y;
-                        }else if(keystate[players[i].leftKeyCode]){
-                            // Turn left
-                            players[i].angle=players[i].angle-turnSpeed;
-                        }else if(keystate[players[i].rightKeyCode]){
-                            // Turn right
-                            players[i].angle=players[i].angle+turnSpeed;
-                        }
-                        if(!keystate[players[i].leftKeyCode]){lpressed[i]=0;} // When left button is released, reset its timecode
-                        if(!keystate[players[i].rightKeyCode]){rpressed[i]=0;} // Same thing for right button
-                        if(!lpressed[i]&&keystate[players[i].leftKeyCode]){lpressed[i]=SDL_GetTicks();} // When left button is pressed, register its timecode
-                        if(!rpressed[i]&&keystate[players[i].rightKeyCode]){rpressed[i]=SDL_GetTicks();} // Same thing for right button
-                    }
-
-                    // Player 10 is special because he's got the mouse
-                    // For explanation, refer to comments above
-                    SDL_PumpEvents();
-                    if(!(abs(rpressed[9]-lpressed[9])>keyPressDelay)&&(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1))&&(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3))&&players[9].powerup.available){
-                        players[9].powerup.available=false;
-                        players[9].powerup.running=true;
-                        players[9].powerup.angle[0]=players[9].angle-90;
-                        players[9].powerup.angle[1]=players[9].angle+90;
-                        players[9].powerup.pos[0]=players[9].pos;
-                        players[9].powerup.pos[1]=players[9].pos;
-                        players[9].powerup.xDouble[0]=players[9].powerup.xDouble[1]=players[9].pos.x;
-                        players[9].powerup.yDouble[0]=players[9].powerup.yDouble[1]=players[9].pos.y;
-                    }else if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
-                        players[9].angle=players[9].angle-turnSpeed;
-                    }else if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3)){
-                        players[9].angle=players[9].angle+turnSpeed;
-                    }
-                    if(!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1))){lpressed[9]=0;}
-                    if(!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3))){rpressed[9]=0;}
-                    if(!lpressed[9]&&(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1))){lpressed[9]=SDL_GetTicks();}
-                    if(!rpressed[9]&&(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3))){rpressed[9]=SDL_GetTicks();}
-
-                    // Determine new positions of each player's head and powerups
-                    for(int i=0;i<10;i++)
-                    {
-                        // Line head
-                        players[i].xDouble+=(double)stepSize*cos(players[i].angle); // Move line head by one step
-                        players[i].yDouble+=(double)stepSize*sin(players[i].angle);
-                        players[i].pos.x=(int)round(players[i].xDouble); // Round screen position to closest pixel
-                        players[i].pos.y=(int)round(players[i].yDouble);
-
-                        // Powerup first arm
-                        players[i].powerup.xDouble[0]+=3*(double)stepSize*cos(players[i].powerup.angle[0]);
-                        players[i].powerup.yDouble[0]+=3*(double)stepSize*sin(players[i].powerup.angle[0]);
-                        players[i].powerup.pos[0].x=(int)round(players[i].powerup.xDouble[0]);
-                        players[i].powerup.pos[0].y=(int)round(players[i].powerup.yDouble[0]);
-                        // Powerup second arm
-                        players[i].powerup.xDouble[1]+=3*(double)stepSize*cos(players[i].powerup.angle[1]);
-                        players[i].powerup.yDouble[1]+=3*(double)stepSize*sin(players[i].powerup.angle[1]);
-                        players[i].powerup.pos[1].x=(int)round(players[i].powerup.xDouble[1]);
-                        players[i].powerup.pos[1].y=(int)round(players[i].powerup.yDouble[1]);
-                    }
-
-                    // Check for collisions... here comes the Reaper
                     for(int i=0;i<10;i++){
-                        if(players[i].enabled&&players[i].alive){
-                            // Check if the player has touched the screen
-                            if((players[i].pos.x<10)||(players[i].pos.y<10)||(players[i].pos.x>prgw-10)||(players[i].pos.y>prgh-10)){
-                                // The player is outside the borders! Did he get out with a good angle? If yes, transfer him to the other side of the screen
-                                bool angleIsGood=false;
-                                if(players[i].pos.x<10){if((sin(players[i].angle)>-0.174)&&(sin(players[i].angle)<0.174)){angleIsGood=true; players[i].pos.x=prgw-15;}}
-                                if(players[i].pos.y<10){if((cos(players[i].angle)>-0.174)&&(cos(players[i].angle)<0.174)){angleIsGood=true; players[i].pos.y=prgh-15;}}
-                                if(players[i].pos.x>prgw-10){if((sin(players[i].angle)>-0.174)&&(sin(players[i].angle)<0.174)){angleIsGood=true; players[i].pos.x=15;}}
-                                if(players[i].pos.y>prgh-10){if((cos(players[i].angle)>-0.174)&&(cos(players[i].angle)<0.174)){angleIsGood=true; players[i].pos.y=15;}}
-                                if(angleIsGood){
-                                    // Player made the transfer to the other screen: Adjust his real position
-                                    players[i].xDouble=players[i].pos.x;
-                                    players[i].yDouble=players[i].pos.y;
-                                }else{
-                                    // He's gotta die
-                                    players[i].alive=false;
-
-                                    // Give other players points // TODO: This is supposed to be a function
-                                    for(int j=0;j<10;j++){
-                                        if(i!=j){
-                                            if(players[j].enabled && players[j].alive){
-                                                players[j].pts++;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Player is inside screen bounds, now check for collisions with other players
-                            if(players[i].alive){ // Is he STILL alive?
-                                if(evilPixels[players[i].pos.x][players[i].pos.y]){ // o_O player touched something evil and will now die
-                                    players[i].alive=false;
-                                    // Give other players points // TODO: This is supposed to be a function
-                                    for(int j=0;j<10;j++){
-                                        if(i!=j){
-                                            if(players[j].enabled && players[j].alive){
-                                                players[j].pts++;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        players[i]->react(keystate,keyPressDelay,turnSpeed,bombMaxSize,bombMinSize,prgw,prgh,sScreen,players,gameScreen);
                     }
-                    stepsSinceLastHole++;
 
-                    // Check for bomb request and execute
                     for(int i=0;i<10;i++){
-                        if(players[i].enabled && players[i].alive && players[i].bombAvail && lpressed[i] && rpressed[i] && (lpressed[i]-rpressed[i]>keyPressDelay)){
-                            // Bomb key combination detected!
-                            players[i].bombAvail=false;
+                        // Determine new positions of each player's head and powerups
+                        players[i]->moveHead(stepSize);
+                        players[i]->movePowerup(stepSize,prgw,prgh);
+                    }
 
-                            // Prepare drawing bomb
-                            SDL_Surface *sbomb=NULL;
-                            SDL_Rect rbomb;
-
-                            // Randomly determine bomb size (w and h)
-                            int nw=(rand()%(bombMaxSize-bombMinSize+1))+bombMinSize;
-                            int nh=(rand()%(bombMaxSize-bombMinSize+1))+bombMinSize;
-
-                            // Make sure the bomb is inside the window
-                            if(players[i].pos.x-int((double)nw/2)<0){nw=(players[i].pos.x)*2-5;}
-                            if(players[i].pos.y-int((double)nh/2)<0){nh=(players[i].pos.y)*2-5;}
-                            if(players[i].pos.x+int((double)nw/2)>prgw){nw=(prgw-(players[i].pos.x))*2-5;}
-                            if(players[i].pos.y+int((double)nh/2)>prgw){nh=(prgh-(players[i].pos.y))*2-5;}
-
-                            // Build the bomb
-                            sbomb=SDL_CreateRGBSurface(SDL_HWSURFACE,nw,nh,32,0,0,0,0);
-                            SDL_FillRect(sbomb,NULL,SDL_MapRGB(sbomb->format,players[i].color.r,players[i].color.g,players[i].color.b));
-                            rbomb.x=players[i].pos.x-int((double)sbomb->w/2);
-                            rbomb.y=players[i].pos.y-int((double)sbomb->h/2);
-
-                            // Draw the bomb
-                            SDL_BlitSurface(sbomb,NULL,sScreen,&rbomb);
-                            SDL_Flip(sScreen);
-
-                            players[i].alive=false;  // Ugly hack: Temporarly kill the current player to avoid getting points for oneself
-
-                            // Collect 2 points for each killed opponent, kill the victim
+                    // Collision detection
+                    for(int i=0;i<10;i++){
+                        // Check for collisions... here comes the Reaper
+                        if(players[i]->collisionTestWithKill(gameScreen,prgw,prgh)){
+                            // Player just died, give other players points
                             for(int j=0;j<10;j++){
-                                if((players[j].pos.x>rbomb.x)&&(players[j].pos.y>rbomb.y)&&(players[j].pos.x<rbomb.x+sbomb->w)&&(players[j].pos.y<rbomb.y+sbomb->h)){
-                                    if(players[j].enabled && players[j].alive){players[i].pts=players[i].pts+2;}
-                                    players[j].alive=false;
-                                }
-                            }
-                            // Undo ugly hack from above
-                            players[i].alive=true;
-
-                            // Make a dramatic pause (maybe remove this in future version?)
-                            SDL_Delay(100);
-
-                            // Area left by bomb shall turn black
-                            SDL_FillRect(sbomb,NULL,SDL_MapRGB(sbomb->format,0,0,0));
-                            SDL_BlitSurface(sbomb,NULL,sScreen,&rbomb);
-                            SDL_Flip(sScreen);
-                            for(int n=rbomb.x;n<rbomb.x+sbomb->w;n++){
-                                for(int m=rbomb.y;m<rbomb.y+sbomb->h;m++){
-                                    evilPixels[n][m]=false;
-                                }
-                            }
-                        }
-                    }
-
-                    // Check for teleport request and execute
-                    for(int i=0;i<10;i++)
-                    {
-                        if(players[i].enabled && players[i].alive && lpressed[i] && rpressed[i] && (rpressed[i]-lpressed[i]>keyPressDelay) && players[i].teleportAvail)
-                        { // Teleport keycombination detected!
-                            players[i].teleportAvail=false;
-
-                            // Determine where the player will arrive and put him there
-                            SDL_Rect targetPosition;
-                            int rMax=prgw-101,rMin=101;
-                            targetPosition.x=(rand()%(rMax-rMin+1))+rMin;
-                            rMax=prgh-101;
-                            targetPosition.y=(rand()%(rMax-rMin+1))+rMin;
-                            players[i].pos=targetPosition;
-                            players[i].xDouble=targetPosition.x;
-                            players[i].yDouble=targetPosition.y;
-
-                            // Draw a square that will help him survive there
-                            SDL_Surface *sSurvivalSquare;
-                            targetPosition.x-=50; targetPosition.y-=50;
-                            sSurvivalSquare=SDL_CreateRGBSurface(SDL_HWSURFACE,100,100,32,0,0,0,0);
-                            SDL_FillRect(sSurvivalSquare,NULL,SDL_MapRGB(sSurvivalSquare->format,0,0,0));
-                            SDL_BlitSurface(sSurvivalSquare,NULL,sScreen,&targetPosition);
-                            SDL_Flip(sScreen);
-                            for(int n=targetPosition.x;n<targetPosition.x+sSurvivalSquare->w;n++)
-                            {
-                                for(int m=targetPosition.y;m<targetPosition.y+sSurvivalSquare->h;m++)
-                                {
-                                    evilPixels[n][m]=false;
-                                }
-                            }
-                        }
-                    }
-
-                    // Disable powerups that have touched the wall
-                    for(int i=0;i<10;i++){
-                        if(players[i].enabled && players[i].alive){
-                            if((players[i].powerup.pos[0].x<10)||(players[i].powerup.pos[0].y<10)||(players[i].powerup.pos[0].x>prgw-10)||(players[i].powerup.pos[0].y>prgh-10)
-                                    || (players[i].powerup.pos[1].x<10)||(players[i].powerup.pos[1].y<10)||(players[i].powerup.pos[1].x>prgw-10)||(players[i].powerup.pos[1].y>prgh-10))
-                            {
-                                players[i].powerup.running=false;
-                            }
-                        }
-                    }
-
-                    // Draw the new situation
-                    for(int i=0;i<10;i++){
-                        if(players[i].enabled && players[i].alive){
-                            Uint32 currentColor=SDL_MapRGB(sScreen->format,players[i].color.r,players[i].color.g,players[i].color.b);
-                            
-                            // Draw player's head
-                            myDrawFillRect(sScreen, players[i].pos.x-int(settings->get("slipLevel")/2), players[i].pos.y-int(settings->get("slipLevel")/2),settings->get("slipLevel"),settings->get("slipLevel"),currentColor);
-
-                            // Register player's new position to evilPixels
-                            evilPixels[players[i].pos.x][players[i].pos.y]=true;
-                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y]=true;}
-                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x][players[i].pos.y-1]=true;}
-                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y-1]=true;}
-                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x+1][players[i].pos.y]=true;}
-                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x][players[i].pos.y+1]=true;}
-                            if(settings->get("slipLevel")>1){evilPixels[players[i].pos.x+1][players[i].pos.y+1]=true;}
-                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x-1][players[i].pos.y+1]=true;}
-                            if(settings->get("slipLevel")>2){evilPixels[players[i].pos.x+1][players[i].pos.y-1]=true;}
-
-                            // Draw player's powerup
-                            if(players[i].powerup.running && settings->get("powerupsEnabled")){
-                                // Draw first arm and register to evilPixels
-                                myDrawFillRect(sScreen, players[i].powerup.pos[0].x-2, players[i].powerup.pos[0].y-1,3,2,currentColor);
-                                evilPixels[players[i].powerup.pos[0].x-2][players[i].powerup.pos[0].y-1]=true;
-                                evilPixels[players[i].powerup.pos[0].x-1][players[i].powerup.pos[0].y-1]=true;
-                                evilPixels[players[i].powerup.pos[0].x][players[i].powerup.pos[0].y-1]=true;
-                                evilPixels[players[i].powerup.pos[0].x-2][players[i].powerup.pos[0].y]=true;
-                                evilPixels[players[i].powerup.pos[0].x-1][players[i].powerup.pos[0].y]=true;
-                                evilPixels[players[i].powerup.pos[0].x][players[i].powerup.pos[0].y]=true;
-                                
-                                // Draw second arm and register to evilPixels
-                                myDrawFillRect(sScreen, players[i].powerup.pos[1].x-2, players[i].powerup.pos[1].y-1,2,3,currentColor);
-                                evilPixels[players[i].powerup.pos[1].x-2][players[i].powerup.pos[1].y-1]=true;
-                                evilPixels[players[i].powerup.pos[1].x-1][players[i].powerup.pos[1].y-1]=true;
-                                evilPixels[players[i].powerup.pos[1].x][players[i].powerup.pos[1].y-1]=true;
-                                evilPixels[players[i].powerup.pos[1].x-2][players[i].powerup.pos[1].y]=true;
-                                evilPixels[players[i].powerup.pos[1].x-1][players[i].powerup.pos[1].y]=true;
-                                evilPixels[players[i].powerup.pos[1].x][players[i].powerup.pos[1].y]=true;
-                            }
-                            
-                            // Code for the creation of the holes
-                            if(settings->get("holesEnabled")){
-                                // If we are currently at a pos where a hole will be drawn, register current pos to holeBackupPos
-                                if(stepsSinceLastHole<holeSize){
-                                    holeBackupPos[i][stepsSinceLastHole]=players[i].pos;
-                                }
-
-                                // If we are 3 steps away from the hole that will be drawn next, draw it
-                                if(stepsSinceLastHole>=(holeSize+3)){
-                                    for(int j=0;j<holeSize;j++){
-                                        myDrawFillRect(sScreen, holeBackupPos[i][j].x-int(settings->get("slipLevel")/2), holeBackupPos[i][j].y-int(settings->get("slipLevel")/2),settings->get("slipLevel"),settings->get("slipLevel"),SDL_MapRGB(sScreen->format,0,0,0));
-                                        evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y]=false;
-                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y]=false;}
-                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y-1]=false;}
-                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y-1]=false;}
-                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y]=false;}
-                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x][holeBackupPos[i][j].y+1]=false;}
-                                        if(settings->get("slipLevel")>1){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y+1]=false;}
-                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x-1][holeBackupPos[i][j].y+1]=false;}
-                                        if(settings->get("slipLevel")>2){evilPixels[holeBackupPos[i][j].x+1][holeBackupPos[i][j].y-1]=false;}
+                                if(i!=j){
+                                    if(players[j]->lives()){
+                                        players[j]->givePoints(1);
                                     }
                                 }
-
-                                // If we have gone far enough for a new hole, reset stepsSinceLastHole to initiate the new hole
-                                if(stepsSinceLastHole>=(holeSize+holeDelay)){stepsSinceLastHole=0;}
                             }
+                        }
+                    }
+
+                    for(int i=0;i<10;i++){
+                        // Draw and register to evilPixels
+                        players[i]->drawHead(gameScreen,settings->get("slipLevel"));
+                        players[i]->drawPowerup(gameScreen);
+                    }
+
+                    if(settings->get("holesEnabled")){
+                        for(int i=0;i<10;i++){
+                            players[i]->doHoles(settings->get("slipLevel"),gameScreen);
                         }
                     }
                     SDL_Flip(sScreen);
@@ -872,7 +550,7 @@ int main(int argc, char *argv[])
                     // Is there just one more player left alive? If so, terminate the round
                     int p=0;
                     for(int i=0;i<10;i++){
-                        if(players[i].enabled && players[i].alive){p++;}
+                        if(players[i]->lives()){p++;}
                     }
                     if(p<=1){roundEnabled=false;}
 
@@ -887,39 +565,25 @@ int main(int argc, char *argv[])
             // Show the points of the round (game is not over yet, there might be another round)
             if(go && !quit){
                 // Collect the points into a convenience datastructure
-                // TODO: This stuff ist just ugly and confusing... I should create a standard datastructure that has some elegance.
-                int nr=0;
                 for(int i=0;i<10;i++){
-                    if(players[i].enabled){
-                        ppts[nr].pts=players[i].pts;
-                        ppts[nr].nr=i;
-                        ppts[nr].enabled=true;
-                        nr++;
+                    if(players[i]->isEnabled()){
+                        ppts[i].pts=players[i]->getPts();
+                        ppts[i].id=i;
+                        ppts[i].enabled=true;
+                    }else{
+                        ppts[i].enabled=false;
                     }
                 }
-                for(int i=nr;i<10;i++){ppts[i].enabled=false;}
 
                 // Sort
-                // TODO: Ugh, this is an ugly bubble sort... I should use something smarter.
-                for (int i=0;i<nr;i++){
-                    for (int j=0; j<nr-1-i; j++){
-                        if ((ppts[j].pts)<(ppts[j+1].pts)){
-                            int knr=ppts[j].nr; // swap
-                            int kpts=ppts[j].pts;
-                            ppts[j].nr=ppts[j+1].nr;
-                            ppts[j].pts=ppts[j+1].pts;
-                            ppts[j+1].nr=knr;
-                            ppts[j+1].pts=kpts;
-                        }
-                    }
-                }
+                std::sort(ppts,ppts+10, Playerpts());
 
                 // Display the points list
                 for(int i=0;i<10;i++){
                     if(ppts[i].enabled){
                         char tt[500];
-                        sprintf(tt,"Player %i: %i",ppts[i].nr+1,ppts[i].pts);
-                        sFont=TTF_RenderText_Blended(fontDigitLarge,tt,players[ppts[i].nr].color);
+                        sprintf(tt,"Player %i: %i",ppts[i].id+1,ppts[i].pts);
+                        sFont=TTF_RenderText_Blended(fontDigitLarge,tt,players[ppts[i].id]->getColor());
                         rFont.x=250;
                         rFont.y=((i)*50+10);
                         SDL_BlitSurface(sFont,NULL,sScreen,&rFont);
@@ -929,8 +593,8 @@ int main(int argc, char *argv[])
 
                 // Display footer message (if user termination criteria is reached, already show that we're done)
                 // TODO: The behaviour described in () above makes not much sence
-                if((settings->get("amountRoundsInGame")>0)&&(currentRound+1>=settings->get("amountRoundsInGame"))){sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0].color);}
-                else{sFont=TTF_RenderText_Blended(fontDigitSmall,"Press Space...",players[9].color);}
+                if((settings->get("amountRoundsInGame")>0)&&(currentRound+1>=settings->get("amountRoundsInGame"))){sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0]->getColor());}
+                else{sFont=TTF_RenderText_Blended(fontDigitSmall,"Press Space...",players[9]->getColor());}
                 rFont.y=515;
                 SDL_BlitSurface(sFont,NULL,sScreen,&rFont);
                 SDL_Flip(sScreen);
@@ -953,7 +617,7 @@ int main(int argc, char *argv[])
             // Check if the game is over (if a player has made enough points)
             int amountActivePlayers=0,bestScore=0;
             for(int i=0;i<10;i++){
-                if(players[i].enabled){amountActivePlayers++; if(players[i].pts>bestScore){bestScore=players[i].pts;}}
+                if(players[i]->isEnabled()){amountActivePlayers++; if(players[i]->getPts()>bestScore){bestScore=players[i]->getPts();}}
             }
 
             bool gameOver=false;
@@ -981,15 +645,15 @@ int main(int argc, char *argv[])
                 for(int i=0;i<10;i++){
                     if(ppts[i].enabled){
                         char tt[500];
-                        sprintf(tt,"Player %i:%i",ppts[i].nr+1,ppts[i].pts);
-                        sFont=TTF_RenderText_Blended(fontDigitLarge,tt,players[ppts[i].nr].color);
+                        sprintf(tt,"Player %i:%i",ppts[i].id+1,ppts[i].pts);
+                        sFont=TTF_RenderText_Blended(fontDigitLarge,tt,players[ppts[i].id]->getColor());
                         rFont.x=250;
                         rFont.y=((i)*50+10);
                         SDL_BlitSurface(sFont,NULL,sScreen,&rFont);
                         SDL_Flip(sScreen);
                     }
                 }
-                sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0].color);
+                sFont=TTF_RenderText_Blended(fontDigitSmall,"Finished! Press Space...",players[0]->getColor());
                 rFont.y=515;
                 SDL_BlitSurface(sFont,NULL,sScreen,&rFont);
                 SDL_Flip(sScreen);
@@ -1051,6 +715,10 @@ leaveNow:
     SDL_Quit();
 
     delete settings;
+    delete gameScreen;
+    for(int i=0;i<10;i++){
+        delete players[i];
+    }
     
     return EXIT_SUCCESS;
 }
@@ -1236,12 +904,12 @@ int options(SDL_Surface *screen, Settings* settings)
                     break;
 
                     default:
-                        break;
+                    break;
                 }
             }// end Keydown
 
             default:
-                break;
+            break;
         }// end switch
 
         if(kok.isClicked()){ok=true;}
@@ -1301,31 +969,31 @@ bool isClickInRect(SDL_Event event, int x0, int y0, int x1, int y1){
 }
 
 
-int checkGo(Player* players){
+int checkGo(Player** players){
     /// This function ensures that there is a valid set of players for the game. Yes: returns true, No: Suggests a corrected set.
 
     // If necessary, add one or two players to form a valid set of players
     int n=0;
     for(int i=0;i<10;i++)
     {
-        if(players[i].enabled){n++;}
+        if(players[i]->isEnabled()){n++;}
     }
     switch(n){
         case 0:
-            players[0].enabled=true;
-            players[7].enabled=true;
+            players[0]->enable();
+            players[7]->enable();
         break;
 
         case 1:
-            if(players[0].enabled){
-                players[7].enabled=true;
+            if(players[0]->isEnabled()){
+                players[7]->enable();
             }else{
-                players[0].enabled=true;
+                players[0]->enable();
             }
         break;
 
         default:
-            return true;
+        return true;
         break;
     }
 

@@ -1,0 +1,10 @@
+pauseAllowed = 0	Pausing game: 1=allowed, 0=disallowed
+slipLevel = 3	SlipLevel (1-3), 1 means that you can pass easily through other lines, 3 = impossible to pass through lines
+holesEnabled = 1	Holes in the lines: 1=active, 0=inactive
+amountRoundsInGame = -1	Number of rounds per game. 0 = Never-ending game, -1 = Decide looking at the players' points
+gameDelay = 30	Game speed (default=30, more=slower, less=faster)
+showButtons = 1	Show Buttons during the game: 1=yes 0=no
+powerupsEnabled = 1	Enable Powerups: 1=yes   0=no
+handicapsEnabled = 0	Enable Handicaps: 1=yes   0=no
+bombsEnabled = 1	Enable Bombs: 1=yes   0=no
+teleportEnabled = 1	Enable Teleport: 1=yes   0=no
