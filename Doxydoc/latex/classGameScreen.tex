@@ -1,0 +1,211 @@
+\hypertarget{classGameScreen}{}\section{Game\+Screen Class Reference}
+\label{classGameScreen}\index{Game\+Screen@{Game\+Screen}}
+
+
+{\ttfamily \#include $<$gamescreen.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classGameScreen_a261e48ed7a96ea0df0a45a524fdc0f9a}{Game\+Screen} (S\+D\+L\+\_\+\+Surface $\ast$screen, int new\+Prgw, int new\+Prgh)
+\begin{DoxyCompactList}\small\item\em Constructor / destructor -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. \end{DoxyCompactList}\item 
+\hyperlink{classGameScreen_a0d25dfce42d72954aab40dbccbf1a0b1}{$\sim$\+Game\+Screen} ()
+\item 
+void \hyperlink{classGameScreen_ae4ba46c43b5c210f9f01c3742a7de32a}{clear\+All} ()
+\begin{DoxyCompactList}\small\item\em More advanced functions-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------. \end{DoxyCompactList}\item 
+void \hyperlink{classGameScreen_aecc2e4702ee552f8910674098f58d78a}{fill\+Rect} (const int x, const int y, const int w, const int h, const Uint32 color)
+\item 
+void \hyperlink{classGameScreen_ab6288b5bf5e4b55f13dd0fa57bb00cdd}{fill\+Rect} (const S\+D\+L\+\_\+\+Rect in\+Rect, const Uint32 color)
+\item 
+void \hyperlink{classGameScreen_ae953ed6c4d9d05ed833aca57197251ce}{fill\+Rect} (const int x, const int y, const int w, const int h, const S\+D\+L\+\_\+\+Color color)
+\item 
+void \hyperlink{classGameScreen_ad238ac7edbdcd2146e46549046c3a66c}{fill\+Rect} (const S\+D\+L\+\_\+\+Rect in\+Rect, const S\+D\+L\+\_\+\+Color color)
+\item 
+void \hyperlink{classGameScreen_acd5bcd1c48cbece054e2ab81ee13f115}{clear\+Rect} (const int x, const int y, const int w, const int h)
+\item 
+void \hyperlink{classGameScreen_a3b0e4a997c1a70eedaad70f5528aa76d}{clear\+Rect} (const S\+D\+L\+\_\+\+Rect in\+Rect)
+\item 
+void \hyperlink{classGameScreen_ac557bae4483c1a081025b93283ab2cc0}{flip} ()
+\item 
+bool \hyperlink{classGameScreen_a237598c9fc8ed55da47eee6b2a79163d}{has\+Collision} (const int x, const int y, const int w, const int h)
+\item 
+bool \hyperlink{classGameScreen_ad7abbecce93b436fe8b0da842b84f700}{has\+Collision} (const S\+D\+L\+\_\+\+Rect in\+Rect)
+\item 
+void \hyperlink{classGameScreen_ac65d8850623fadc20cbd86b6a53b812b}{debug\+\_\+draw\+Evil\+Pixels} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classGameScreen_a6aff345a535677a3d955a5a40cfe3fd9}{prgw}
+\begin{DoxyCompactList}\small\item\em Stores the width of the window. \end{DoxyCompactList}\item 
+int \hyperlink{classGameScreen_a9eec4473f165faa5b0464f3fd93bd49d}{prgh}
+\begin{DoxyCompactList}\small\item\em Stores the height of the window. \end{DoxyCompactList}\item 
+S\+D\+L\+\_\+\+Surface $\ast$ \hyperlink{classGameScreen_a3cccda4980b40a1ab70bee3b244f7741}{s\+Screen}
+\begin{DoxyCompactList}\small\item\em Stores S\+D\+L\+\_\+\+Surface to which we draw. \end{DoxyCompactList}\item 
+bool $\ast$ \hyperlink{classGameScreen_aef21e4a0c39f3e68962fe84357c54cfa}{evil\+Pixels}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class allows to simultaneously draw to screen and register to evil\+Pixels. It takes care of the management of any \char`\"{}dangerous\char`\"{} object on the screen during the game.
+
+Copyright 2009-\/2014 Sandro Kalbermatter
+
+L\+I\+C\+E\+N\+S\+E\+: This program is licenced under G\+P\+L v3.\+0, see \href{http://www.gnu.org/licenses/gpl-3.0}{\tt http\+://www.\+gnu.\+org/licenses/gpl-\/3.\+0} It comes with absolutely no warranty. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classGameScreen_a261e48ed7a96ea0df0a45a524fdc0f9a}{}\index{Game\+Screen@{Game\+Screen}!Game\+Screen@{Game\+Screen}}
+\index{Game\+Screen@{Game\+Screen}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{Game\+Screen}]{\setlength{\rightskip}{0pt plus 5cm}Game\+Screen\+::\+Game\+Screen (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{screen, }
+\item[{int}]{new\+Prgw, }
+\item[{int}]{new\+Prgh}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_a261e48ed7a96ea0df0a45a524fdc0f9a}
+
+
+Constructor / destructor -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. 
+
+Copyright 2009-\/2014 Sandro Kalbermatter
+
+L\+I\+C\+E\+N\+S\+E\+: This program is licenced under G\+P\+L v3.\+0, see \href{http://www.gnu.org/licenses/gpl-3.0}{\tt http\+://www.\+gnu.\+org/licenses/gpl-\/3.\+0} It comes with absolutely no warranty. \hypertarget{classGameScreen_a0d25dfce42d72954aab40dbccbf1a0b1}{}\index{Game\+Screen@{Game\+Screen}!````~Game\+Screen@{$\sim$\+Game\+Screen}}
+\index{````~Game\+Screen@{$\sim$\+Game\+Screen}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{$\sim$\+Game\+Screen}]{\setlength{\rightskip}{0pt plus 5cm}Game\+Screen\+::$\sim$\+Game\+Screen (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_a0d25dfce42d72954aab40dbccbf1a0b1}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classGameScreen_ae4ba46c43b5c210f9f01c3742a7de32a}{}\index{Game\+Screen@{Game\+Screen}!clear\+All@{clear\+All}}
+\index{clear\+All@{clear\+All}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{clear\+All}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::clear\+All (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ae4ba46c43b5c210f9f01c3742a7de32a}
+
+
+More advanced functions-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------. 
+
+Clear evil\+Pixels, but don\textquotesingle{}t draw anything. \hypertarget{classGameScreen_acd5bcd1c48cbece054e2ab81ee13f115}{}\index{Game\+Screen@{Game\+Screen}!clear\+Rect@{clear\+Rect}}
+\index{clear\+Rect@{clear\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{clear\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::clear\+Rect (
+\begin{DoxyParamCaption}
+\item[{const int}]{x, }
+\item[{const int}]{y, }
+\item[{const int}]{w, }
+\item[{const int}]{h}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_acd5bcd1c48cbece054e2ab81ee13f115}
+Removes a rectangle from evil\+Pixels and draws it on the screen using black color \hypertarget{classGameScreen_a3b0e4a997c1a70eedaad70f5528aa76d}{}\index{Game\+Screen@{Game\+Screen}!clear\+Rect@{clear\+Rect}}
+\index{clear\+Rect@{clear\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{clear\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::clear\+Rect (
+\begin{DoxyParamCaption}
+\item[{const S\+D\+L\+\_\+\+Rect}]{in\+Rect}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_a3b0e4a997c1a70eedaad70f5528aa76d}
+Overloaded function, this one deals with an S\+D\+L\+\_\+\+Rect \hypertarget{classGameScreen_ac65d8850623fadc20cbd86b6a53b812b}{}\index{Game\+Screen@{Game\+Screen}!debug\+\_\+draw\+Evil\+Pixels@{debug\+\_\+draw\+Evil\+Pixels}}
+\index{debug\+\_\+draw\+Evil\+Pixels@{debug\+\_\+draw\+Evil\+Pixels}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{debug\+\_\+draw\+Evil\+Pixels}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::debug\+\_\+draw\+Evil\+Pixels (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ac65d8850623fadc20cbd86b6a53b812b}
+Will display black for harmless pixel and red for evilpixel. Use for debugging evil\+Pixels. Usage\+: put a breakpoint right after call to this function, then look at the screen to see all evil\+Pixels. \hypertarget{classGameScreen_aecc2e4702ee552f8910674098f58d78a}{}\index{Game\+Screen@{Game\+Screen}!fill\+Rect@{fill\+Rect}}
+\index{fill\+Rect@{fill\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{fill\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::fill\+Rect (
+\begin{DoxyParamCaption}
+\item[{const int}]{x, }
+\item[{const int}]{y, }
+\item[{const int}]{w, }
+\item[{const int}]{h, }
+\item[{const Uint32}]{color}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_aecc2e4702ee552f8910674098f58d78a}
+Draw a rectancle to the screen and also register it to evil\+Pixels \hypertarget{classGameScreen_ab6288b5bf5e4b55f13dd0fa57bb00cdd}{}\index{Game\+Screen@{Game\+Screen}!fill\+Rect@{fill\+Rect}}
+\index{fill\+Rect@{fill\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{fill\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::fill\+Rect (
+\begin{DoxyParamCaption}
+\item[{const S\+D\+L\+\_\+\+Rect}]{in\+Rect, }
+\item[{const Uint32}]{color}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ab6288b5bf5e4b55f13dd0fa57bb00cdd}
+Oveloaded function, this one deals with an S\+D\+L\+\_\+\+Rect and a color in Uint32 format \hypertarget{classGameScreen_ae953ed6c4d9d05ed833aca57197251ce}{}\index{Game\+Screen@{Game\+Screen}!fill\+Rect@{fill\+Rect}}
+\index{fill\+Rect@{fill\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{fill\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::fill\+Rect (
+\begin{DoxyParamCaption}
+\item[{const int}]{x, }
+\item[{const int}]{y, }
+\item[{const int}]{w, }
+\item[{const int}]{h, }
+\item[{const S\+D\+L\+\_\+\+Color}]{color}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ae953ed6c4d9d05ed833aca57197251ce}
+Oveloaded function, this one deals with a color in S\+D\+L\+\_\+\+Color format \hypertarget{classGameScreen_ad238ac7edbdcd2146e46549046c3a66c}{}\index{Game\+Screen@{Game\+Screen}!fill\+Rect@{fill\+Rect}}
+\index{fill\+Rect@{fill\+Rect}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{fill\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::fill\+Rect (
+\begin{DoxyParamCaption}
+\item[{const S\+D\+L\+\_\+\+Rect}]{in\+Rect, }
+\item[{const S\+D\+L\+\_\+\+Color}]{color}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ad238ac7edbdcd2146e46549046c3a66c}
+Oveloaded function, this one deals with an S\+D\+L\+\_\+\+Rect and a color in S\+D\+L\+\_\+\+Color format \hypertarget{classGameScreen_ac557bae4483c1a081025b93283ab2cc0}{}\index{Game\+Screen@{Game\+Screen}!flip@{flip}}
+\index{flip@{flip}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{flip}]{\setlength{\rightskip}{0pt plus 5cm}void Game\+Screen\+::flip (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ac557bae4483c1a081025b93283ab2cc0}
+Write changes to screen \hypertarget{classGameScreen_a237598c9fc8ed55da47eee6b2a79163d}{}\index{Game\+Screen@{Game\+Screen}!has\+Collision@{has\+Collision}}
+\index{has\+Collision@{has\+Collision}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{has\+Collision}]{\setlength{\rightskip}{0pt plus 5cm}bool Game\+Screen\+::has\+Collision (
+\begin{DoxyParamCaption}
+\item[{const int}]{x, }
+\item[{const int}]{y, }
+\item[{const int}]{w, }
+\item[{const int}]{h}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_a237598c9fc8ed55da47eee6b2a79163d}
+Checks if anything in the specified rectangle collides with an evil\+Pixel If so, returns true. \hypertarget{classGameScreen_ad7abbecce93b436fe8b0da842b84f700}{}\index{Game\+Screen@{Game\+Screen}!has\+Collision@{has\+Collision}}
+\index{has\+Collision@{has\+Collision}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{has\+Collision}]{\setlength{\rightskip}{0pt plus 5cm}bool Game\+Screen\+::has\+Collision (
+\begin{DoxyParamCaption}
+\item[{const S\+D\+L\+\_\+\+Rect}]{in\+Rect}
+\end{DoxyParamCaption}
+)}\label{classGameScreen_ad7abbecce93b436fe8b0da842b84f700}
+Overloaded function, this one deals with an S\+D\+L\+\_\+\+Rect 
+
+\subsection{Member Data Documentation}
+\hypertarget{classGameScreen_aef21e4a0c39f3e68962fe84357c54cfa}{}\index{Game\+Screen@{Game\+Screen}!evil\+Pixels@{evil\+Pixels}}
+\index{evil\+Pixels@{evil\+Pixels}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{evil\+Pixels}]{\setlength{\rightskip}{0pt plus 5cm}bool$\ast$ Game\+Screen\+::evil\+Pixels\hspace{0.3cm}{\ttfamily [private]}}\label{classGameScreen_aef21e4a0c39f3e68962fe84357c54cfa}
+Datastructure used for collision detection. This has one entry for each pixel on the screen. If a player lands on a pixel where evil\+Pixels is true, a collision is caused and the player dies. Order\+: height $\ast$ prgw + width (left-\/to-\/right, top-\/to-\/bottom) \hypertarget{classGameScreen_a9eec4473f165faa5b0464f3fd93bd49d}{}\index{Game\+Screen@{Game\+Screen}!prgh@{prgh}}
+\index{prgh@{prgh}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{prgh}]{\setlength{\rightskip}{0pt plus 5cm}int Game\+Screen\+::prgh\hspace{0.3cm}{\ttfamily [private]}}\label{classGameScreen_a9eec4473f165faa5b0464f3fd93bd49d}
+
+
+Stores the height of the window. 
+
+\hypertarget{classGameScreen_a6aff345a535677a3d955a5a40cfe3fd9}{}\index{Game\+Screen@{Game\+Screen}!prgw@{prgw}}
+\index{prgw@{prgw}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{prgw}]{\setlength{\rightskip}{0pt plus 5cm}int Game\+Screen\+::prgw\hspace{0.3cm}{\ttfamily [private]}}\label{classGameScreen_a6aff345a535677a3d955a5a40cfe3fd9}
+
+
+Stores the width of the window. 
+
+\hypertarget{classGameScreen_a3cccda4980b40a1ab70bee3b244f7741}{}\index{Game\+Screen@{Game\+Screen}!s\+Screen@{s\+Screen}}
+\index{s\+Screen@{s\+Screen}!Game\+Screen@{Game\+Screen}}
+\subsubsection[{s\+Screen}]{\setlength{\rightskip}{0pt plus 5cm}S\+D\+L\+\_\+\+Surface$\ast$ Game\+Screen\+::s\+Screen\hspace{0.3cm}{\ttfamily [private]}}\label{classGameScreen_a3cccda4980b40a1ab70bee3b244f7741}
+
+
+Stores S\+D\+L\+\_\+\+Surface to which we draw. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{gamescreen_8h}{gamescreen.\+h}\item 
+\hyperlink{gamescreen_8cpp}{gamescreen.\+cpp}\end{DoxyCompactItemize}

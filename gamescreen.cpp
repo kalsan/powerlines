@@ -1,5 +1,5 @@
 /**
-  Copyright 2009-2014 Sandro Kalbermatter
+  Copyright 2009-2015 Sandro Kalbermatter
 
   LICENSE:
   This program is licenced under GPL v3.0, see http://www.gnu.org/licenses/gpl-3.0

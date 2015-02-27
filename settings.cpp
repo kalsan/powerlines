@@ -1,5 +1,5 @@
 /**
-  Copyright 2014 Sandro Kalbermatter
+  Copyright 2015 Sandro Kalbermatter
   License: GPL v3
 
   This class provides a simple interface for dealing with settings.

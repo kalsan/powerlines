@@ -1,0 +1,538 @@
+\hypertarget{classPlayer}{}\section{Player Class Reference}
+\label{classPlayer}\index{Player@{Player}}
+
+
+{\ttfamily \#include $<$player.\+h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structPlayer_1_1Point}{Point}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classPlayer_a172ac5521a20dbb9490862fa5f3dd6e6}{Player} (const int new\+Hole\+Size, const int new\+Hole\+Delay)
+\begin{DoxyCompactList}\small\item\em Constructor / destructor -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. \end{DoxyCompactList}\item 
+\hyperlink{classPlayer_a749d2c00e1fe0f5c2746f7505a58c062}{$\sim$\+Player} ()
+\item 
+bool \hyperlink{classPlayer_a218ef195d9329e6c636f9720c7eb3b58}{is\+Enabled} ()
+\begin{DoxyCompactList}\small\item\em Getters -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. \end{DoxyCompactList}\item 
+bool \hyperlink{classPlayer_a51db475c4d81863182ed51e109436ec7}{lives} ()
+\item 
+int \hyperlink{classPlayer_aceea3d77b07b2b45c870d7cf1063a951}{get\+Left\+Key\+Code} ()
+\item 
+int \hyperlink{classPlayer_a0978fd16776a588c59dd84fec4d47716}{get\+Right\+Key\+Code} ()
+\item 
+int \hyperlink{classPlayer_a319f5f1cdf07ed8649a336fa347ec142}{get\+Pts} ()
+\item 
+S\+D\+L\+\_\+\+Color \hyperlink{classPlayer_ae5c057b159929ee6210c21bb296ecc93}{get\+Color} ()
+\item 
+void \hyperlink{classPlayer_ab6c7e79f5678f7b1e0633cea8f1b373f}{set\+Color} (S\+D\+L\+\_\+\+Color new\+Color)
+\begin{DoxyCompactList}\small\item\em Setters -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. \end{DoxyCompactList}\item 
+void \hyperlink{classPlayer_a212dbceed395a15bcce9d6028321d39c}{set\+Left\+Key\+Code} (int new\+Key)
+\item 
+void \hyperlink{classPlayer_a5a681cb2c03072ca1123ee63db0aabde}{set\+Right\+Key\+Code} (int new\+Key)
+\item 
+void \hyperlink{classPlayer_af60439bb211d1da858bfdc68e120e0fd}{enable} ()
+\item 
+void \hyperlink{classPlayer_a9d99cb573b2a2d06239510c2b941f2d8}{disable} ()
+\item 
+void \hyperlink{classPlayer_af32c1b07379d1b70fd4d2d654d3fedfe}{toggle\+Enabled} ()
+\item 
+void \hyperlink{classPlayer_aadae68cb1bb79e44da79b3dbdf54ae2c}{reset\+Pts} ()
+\item 
+void \hyperlink{classPlayer_a39939c5afd7a185f502c552279bdd445}{init\+Round} (int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh}, \hyperlink{classSettings}{Settings} $\ast$settings)
+\begin{DoxyCompactList}\small\item\em More advanced functions-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------. \end{DoxyCompactList}\item 
+void \hyperlink{classPlayer_aa68b9fe408e885a8806de7881b102ad6}{draw\+Birth} (S\+D\+L\+\_\+\+Surface $\ast$s\+Screen, int slip\+Level)
+\item 
+void \hyperlink{classPlayer_ada7a1aa4cb80f4ef0579165ee2f40462}{start\+Powerup} ()
+\item 
+void \hyperlink{classPlayer_a6ee577d800e047232c03050b673cc668}{react} (Uint8 $\ast$keystate, int \hyperlink{main_8cpp_a7af15b9cdc41ca984f18113cdea6b134}{key\+Press\+Delay}, double \hyperlink{main_8cpp_a481daf4312d87ec4697e82227394536c}{turn\+Speed}, int \hyperlink{main_8cpp_affaabf8fc47a7dd9262d94ed15876bea}{bomb\+Max\+Size}, int \hyperlink{main_8cpp_a977983348b076a15b137a0f4c8340312}{bomb\+Min\+Size}, int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh}, S\+D\+L\+\_\+\+Surface $\ast$s\+Screen, \hyperlink{classPlayer}{Player} $\ast$players\mbox{[}$\,$\mbox{]}, \hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen)
+\item 
+void \hyperlink{classPlayer_aa19e0519d995ace83f63802c8b6c2a49}{move\+Head} (const double \hyperlink{main_8cpp_a707dc5532cee7444ea37a95fdf2bd851}{step\+Size})
+\item 
+void \hyperlink{classPlayer_a01835b58ecee2d4509184f7e06c608f8}{draw\+Head} (\hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen, int slip\+Level)
+\item 
+void \hyperlink{classPlayer_a0af465a4f6909c99efb995c300957f30}{move\+Powerup} (const double \hyperlink{main_8cpp_a707dc5532cee7444ea37a95fdf2bd851}{step\+Size}, int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh})
+\item 
+void \hyperlink{classPlayer_a5498df59e9ac57670374dfea152b3eb6}{draw\+Powerup} (\hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen)
+\item 
+bool \hyperlink{classPlayer_a657c06ea85f2575144eb8f1ff5bd8f3c}{collision\+Test\+With\+Kill} (\hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen, int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh})
+\item 
+void \hyperlink{classPlayer_ad3e3c485bf4b312224004df1ce885a5e}{start\+Bomb} (int \hyperlink{main_8cpp_affaabf8fc47a7dd9262d94ed15876bea}{bomb\+Max\+Size}, int \hyperlink{main_8cpp_a977983348b076a15b137a0f4c8340312}{bomb\+Min\+Size}, int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh}, S\+D\+L\+\_\+\+Surface $\ast$s\+Screen, \hyperlink{classPlayer}{Player} $\ast$players\mbox{[}$\,$\mbox{]}, \hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen)
+\item 
+bool \hyperlink{classPlayer_aea722aeaf4b9238277840ac21aab7a1c}{receive\+Bomb} (S\+D\+L\+\_\+\+Rect r\+Bomb, S\+D\+L\+\_\+\+Surface $\ast$s\+Bomb)
+\item 
+void \hyperlink{classPlayer_ad263fe7e1919ef5af34bc8aa00bb796f}{start\+Teleport} (int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw}, int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh}, S\+D\+L\+\_\+\+Surface $\ast$s\+Screen, \hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen)
+\item 
+void \hyperlink{classPlayer_a177f47a7c0da1bb95931850ceb9e595e}{do\+Holes} (int slip\+Level, \hyperlink{classGameScreen}{Game\+Screen} $\ast$game\+Screen)
+\item 
+void \hyperlink{classPlayer_a8180d4f29088fa59d1b592d9fe981c16}{give\+Points} (int amount)
+\end{DoxyCompactItemize}
+\subsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structPlayer_1_1Point}{Player\+::\+Point} \hyperlink{classPlayer_a9a42f90c20c3a394c3c3dab176b8c9a0}{Point}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classPlayer_a8da85329252ffcf7f2d14d491620d556}{is\+Left\+Down} (Uint8 $\ast$keystate)
+\item 
+bool \hyperlink{classPlayer_a2c41374b79283937fb1bfdab3369c42d}{is\+Right\+Down} (Uint8 $\ast$keystate)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{classPlayer_a86ca9b85a70bf78c6109c728f311ca8c}{enabled}
+\begin{DoxyCompactList}\small\item\em Does the player exist in the game? \end{DoxyCompactList}\item 
+bool \hyperlink{classPlayer_af6ac9227d5db4826d9a0fa697681e469}{alive}
+\begin{DoxyCompactList}\small\item\em Is the player alive this round? \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_a3b5be83653107f1c320463a6645b5716}{pts}
+\begin{DoxyCompactList}\small\item\em How many points did the player collect in this game? \end{DoxyCompactList}\item 
+S\+D\+L\+\_\+\+Color \hyperlink{classPlayer_ad2ac07f900cc99b0248c36ef083f778f}{color}
+\begin{DoxyCompactList}\small\item\em Color of the player\textquotesingle{}s line. \end{DoxyCompactList}\item 
+double \hyperlink{classPlayer_a7fe7124fd9eeb4bca23da301b913cdd3}{x\+Double}
+\item 
+double \hyperlink{classPlayer_a10fdd50d5dd7c1bb4799f8f40e505a76}{y\+Double}
+\begin{DoxyCompactList}\small\item\em Current real position of the head of the line. \end{DoxyCompactList}\item 
+S\+D\+L\+\_\+\+Rect \hyperlink{classPlayer_a8f4ab33d4123e6268970d9482f93a335}{pos}
+\begin{DoxyCompactList}\small\item\em Current position on screen of the head of the line (rounded to closest pixel) \end{DoxyCompactList}\item 
+double \hyperlink{classPlayer_a97cc0b81477c691d1050befc88d57285}{angle}
+\begin{DoxyCompactList}\small\item\em What direction is the player\textquotesingle{}s line currently facing? \end{DoxyCompactList}\item 
+bool \hyperlink{classPlayer_a48611607e9ae32c375471ce7347f6e21}{bomb\+Avail}
+\begin{DoxyCompactList}\small\item\em Does the player have the right to use the bomb now? \end{DoxyCompactList}\item 
+bool \hyperlink{classPlayer_ac3a0aaedb90e87c36bbfb19d5092cb7b}{teleport\+Avail}
+\begin{DoxyCompactList}\small\item\em Does the player have the right to use teleport now? \end{DoxyCompactList}\item 
+struct \hyperlink{classPowerup}{Powerup} \hyperlink{classPlayer_ac935cf0ac990dabc5d2bb344c3e9685d}{powerup}
+\begin{DoxyCompactList}\small\item\em \hyperlink{classPowerup}{Powerup} of the player. \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_a865b251c8ca4efb1aade99949f08aa3e}{left\+Key\+Code}
+\item 
+int \hyperlink{classPlayer_a6caf1b82bbc044e0e14ed81f929142ae}{right\+Key\+Code}
+\begin{DoxyCompactList}\small\item\em This holds the keymap. \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_a1af72ec313e22fa17c7298b7ddde46ab}{l\+Pressed}
+\item 
+int \hyperlink{classPlayer_a025ccf2fab2797437686a9d4b88147b7}{r\+Pressed}
+\begin{DoxyCompactList}\small\item\em This saves the timecode of the moment when the left / right button was pressed (or 0 if it\textquotesingle{}s released right now) \end{DoxyCompactList}\item 
+\hyperlink{structPlayer_1_1Point}{Point} $\ast$ \hyperlink{classPlayer_a1f4cf1d0ad8148a43a698a548d0d01f7}{hole\+Buffer}
+\begin{DoxyCompactList}\small\item\em Keeps track of points where a hole will be drawn. \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_a9ba2271607df07a07d2454a32fe39f78}{hole\+Size}
+\begin{DoxyCompactList}\small\item\em Size (length) of the holes. \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_a51eb1ca4a5ecc06e99501900b8e8b7e8}{hole\+Delay}
+\begin{DoxyCompactList}\small\item\em Distance to run before new hole is drawn. \end{DoxyCompactList}\item 
+int \hyperlink{classPlayer_ab2eab1f5836b101d675d7e8fe885308d}{steps\+Since\+Last\+Hole}
+\begin{DoxyCompactList}\small\item\em Counter that tells us how far we have gone since the last hole was drawn. Resetted when we have reached hole\+Size + hole\+Delay. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class holds fields and methods that are used for manipulating the players.
+
+Copyright 2009-\/2014 Sandro Kalbermatter
+
+L\+I\+C\+E\+N\+S\+E\+: This program is licenced under G\+P\+L v3.\+0, see \href{http://www.gnu.org/licenses/gpl-3.0}{\tt http\+://www.\+gnu.\+org/licenses/gpl-\/3.\+0} It comes with absolutely no warranty. 
+
+\subsection{Member Typedef Documentation}
+\hypertarget{classPlayer_a9a42f90c20c3a394c3c3dab176b8c9a0}{}\index{Player@{Player}!Point@{Point}}
+\index{Point@{Point}!Player@{Player}}
+\subsubsection[{Point}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Player\+::\+Point}  {\bf Player\+::\+Point}\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a9a42f90c20c3a394c3c3dab176b8c9a0}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classPlayer_a172ac5521a20dbb9490862fa5f3dd6e6}{}\index{Player@{Player}!Player@{Player}}
+\index{Player@{Player}!Player@{Player}}
+\subsubsection[{Player}]{\setlength{\rightskip}{0pt plus 5cm}Player\+::\+Player (
+\begin{DoxyParamCaption}
+\item[{const int}]{new\+Hole\+Size, }
+\item[{const int}]{new\+Hole\+Delay}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a172ac5521a20dbb9490862fa5f3dd6e6}
+
+
+Constructor / destructor -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. 
+
+Copyright 2009-\/2014 Sandro Kalbermatter
+
+L\+I\+C\+E\+N\+S\+E\+: This program is licenced under G\+P\+L v3.\+0, see \href{http://www.gnu.org/licenses/gpl-3.0}{\tt http\+://www.\+gnu.\+org/licenses/gpl-\/3.\+0} It comes with absolutely no warranty. \hypertarget{classPlayer_a749d2c00e1fe0f5c2746f7505a58c062}{}\index{Player@{Player}!````~Player@{$\sim$\+Player}}
+\index{````~Player@{$\sim$\+Player}!Player@{Player}}
+\subsubsection[{$\sim$\+Player}]{\setlength{\rightskip}{0pt plus 5cm}Player\+::$\sim$\+Player (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a749d2c00e1fe0f5c2746f7505a58c062}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classPlayer_a657c06ea85f2575144eb8f1ff5bd8f3c}{}\index{Player@{Player}!collision\+Test\+With\+Kill@{collision\+Test\+With\+Kill}}
+\index{collision\+Test\+With\+Kill@{collision\+Test\+With\+Kill}!Player@{Player}}
+\subsubsection[{collision\+Test\+With\+Kill}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::collision\+Test\+With\+Kill (
+\begin{DoxyParamCaption}
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen, }
+\item[{int}]{prgw, }
+\item[{int}]{prgh}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a657c06ea85f2575144eb8f1ff5bd8f3c}
+Returns true iff player dies right now This must be called after move functions and before draw functions. \hypertarget{classPlayer_a9d99cb573b2a2d06239510c2b941f2d8}{}\index{Player@{Player}!disable@{disable}}
+\index{disable@{disable}!Player@{Player}}
+\subsubsection[{disable}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::disable (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a9d99cb573b2a2d06239510c2b941f2d8}
+\hypertarget{classPlayer_a177f47a7c0da1bb95931850ceb9e595e}{}\index{Player@{Player}!do\+Holes@{do\+Holes}}
+\index{do\+Holes@{do\+Holes}!Player@{Player}}
+\subsubsection[{do\+Holes}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::do\+Holes (
+\begin{DoxyParamCaption}
+\item[{int}]{slip\+Level, }
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a177f47a7c0da1bb95931850ceb9e595e}
+Register current position to hole buffer. If we have gone far enough, draw the hole. If we\textquotesingle{}re far away from the last hole, reset counter to record new hole at next step. \hypertarget{classPlayer_aa68b9fe408e885a8806de7881b102ad6}{}\index{Player@{Player}!draw\+Birth@{draw\+Birth}}
+\index{draw\+Birth@{draw\+Birth}!Player@{Player}}
+\subsubsection[{draw\+Birth}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::draw\+Birth (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{s\+Screen, }
+\item[{int}]{slip\+Level}
+\end{DoxyParamCaption}
+)}\label{classPlayer_aa68b9fe408e885a8806de7881b102ad6}
+Draw the player\textquotesingle{}s starting position and wait 2ms. Note\+: The starting position is N\+O\+T registred to evil\+Pixels. \hypertarget{classPlayer_a01835b58ecee2d4509184f7e06c608f8}{}\index{Player@{Player}!draw\+Head@{draw\+Head}}
+\index{draw\+Head@{draw\+Head}!Player@{Player}}
+\subsubsection[{draw\+Head}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::draw\+Head (
+\begin{DoxyParamCaption}
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen, }
+\item[{int}]{slip\+Level}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a01835b58ecee2d4509184f7e06c608f8}
+Draw the player\textquotesingle{}s head at its new position and register it to evil\+Pixels This must be called after collision test. \hypertarget{classPlayer_a5498df59e9ac57670374dfea152b3eb6}{}\index{Player@{Player}!draw\+Powerup@{draw\+Powerup}}
+\index{draw\+Powerup@{draw\+Powerup}!Player@{Player}}
+\subsubsection[{draw\+Powerup}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::draw\+Powerup (
+\begin{DoxyParamCaption}
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a5498df59e9ac57670374dfea152b3eb6}
+Draw the powerup\textquotesingle{}s two heads at their new positions and register it to evil\+Pixels This must be called after collision test. \hypertarget{classPlayer_af60439bb211d1da858bfdc68e120e0fd}{}\index{Player@{Player}!enable@{enable}}
+\index{enable@{enable}!Player@{Player}}
+\subsubsection[{enable}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::enable (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_af60439bb211d1da858bfdc68e120e0fd}
+\hypertarget{classPlayer_ae5c057b159929ee6210c21bb296ecc93}{}\index{Player@{Player}!get\+Color@{get\+Color}}
+\index{get\+Color@{get\+Color}!Player@{Player}}
+\subsubsection[{get\+Color}]{\setlength{\rightskip}{0pt plus 5cm}S\+D\+L\+\_\+\+Color Player\+::get\+Color (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_ae5c057b159929ee6210c21bb296ecc93}
+\hypertarget{classPlayer_aceea3d77b07b2b45c870d7cf1063a951}{}\index{Player@{Player}!get\+Left\+Key\+Code@{get\+Left\+Key\+Code}}
+\index{get\+Left\+Key\+Code@{get\+Left\+Key\+Code}!Player@{Player}}
+\subsubsection[{get\+Left\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::get\+Left\+Key\+Code (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_aceea3d77b07b2b45c870d7cf1063a951}
+\hypertarget{classPlayer_a319f5f1cdf07ed8649a336fa347ec142}{}\index{Player@{Player}!get\+Pts@{get\+Pts}}
+\index{get\+Pts@{get\+Pts}!Player@{Player}}
+\subsubsection[{get\+Pts}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::get\+Pts (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a319f5f1cdf07ed8649a336fa347ec142}
+\hypertarget{classPlayer_a0978fd16776a588c59dd84fec4d47716}{}\index{Player@{Player}!get\+Right\+Key\+Code@{get\+Right\+Key\+Code}}
+\index{get\+Right\+Key\+Code@{get\+Right\+Key\+Code}!Player@{Player}}
+\subsubsection[{get\+Right\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::get\+Right\+Key\+Code (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a0978fd16776a588c59dd84fec4d47716}
+\hypertarget{classPlayer_a8180d4f29088fa59d1b592d9fe981c16}{}\index{Player@{Player}!give\+Points@{give\+Points}}
+\index{give\+Points@{give\+Points}!Player@{Player}}
+\subsubsection[{give\+Points}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::give\+Points (
+\begin{DoxyParamCaption}
+\item[{int}]{amount}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a8180d4f29088fa59d1b592d9fe981c16}
+Give \textquotesingle{}amount\textquotesingle{} points to this player. \hypertarget{classPlayer_a39939c5afd7a185f502c552279bdd445}{}\index{Player@{Player}!init\+Round@{init\+Round}}
+\index{init\+Round@{init\+Round}!Player@{Player}}
+\subsubsection[{init\+Round}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::init\+Round (
+\begin{DoxyParamCaption}
+\item[{int}]{prgw, }
+\item[{int}]{prgh, }
+\item[{{\bf Settings} $\ast$}]{settings}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a39939c5afd7a185f502c552279bdd445}
+
+
+More advanced functions-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------. 
+
+This function initializes the player and makes it ready for the round. Must be called before beginning a round. \hypertarget{classPlayer_a218ef195d9329e6c636f9720c7eb3b58}{}\index{Player@{Player}!is\+Enabled@{is\+Enabled}}
+\index{is\+Enabled@{is\+Enabled}!Player@{Player}}
+\subsubsection[{is\+Enabled}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::is\+Enabled (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a218ef195d9329e6c636f9720c7eb3b58}
+
+
+Getters -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. 
+
+\hypertarget{classPlayer_a8da85329252ffcf7f2d14d491620d556}{}\index{Player@{Player}!is\+Left\+Down@{is\+Left\+Down}}
+\index{is\+Left\+Down@{is\+Left\+Down}!Player@{Player}}
+\subsubsection[{is\+Left\+Down}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::is\+Left\+Down (
+\begin{DoxyParamCaption}
+\item[{Uint8 $\ast$}]{keystate}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a8da85329252ffcf7f2d14d491620d556}
+Reads the one key out of the keystate which corresponds to the left key of this player. Supports mouse. \hypertarget{classPlayer_a2c41374b79283937fb1bfdab3369c42d}{}\index{Player@{Player}!is\+Right\+Down@{is\+Right\+Down}}
+\index{is\+Right\+Down@{is\+Right\+Down}!Player@{Player}}
+\subsubsection[{is\+Right\+Down}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::is\+Right\+Down (
+\begin{DoxyParamCaption}
+\item[{Uint8 $\ast$}]{keystate}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a2c41374b79283937fb1bfdab3369c42d}
+Reads the one key out of the keystate which corresponds to the right key of this player. Supports mouse. \hypertarget{classPlayer_a51db475c4d81863182ed51e109436ec7}{}\index{Player@{Player}!lives@{lives}}
+\index{lives@{lives}!Player@{Player}}
+\subsubsection[{lives}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::lives (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a51db475c4d81863182ed51e109436ec7}
+\hypertarget{classPlayer_aa19e0519d995ace83f63802c8b6c2a49}{}\index{Player@{Player}!move\+Head@{move\+Head}}
+\index{move\+Head@{move\+Head}!Player@{Player}}
+\subsubsection[{move\+Head}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::move\+Head (
+\begin{DoxyParamCaption}
+\item[{const double}]{step\+Size}
+\end{DoxyParamCaption}
+)}\label{classPlayer_aa19e0519d995ace83f63802c8b6c2a49}
+Determine the new position of the player\textquotesingle{}s head Must be called at each step. \hypertarget{classPlayer_a0af465a4f6909c99efb995c300957f30}{}\index{Player@{Player}!move\+Powerup@{move\+Powerup}}
+\index{move\+Powerup@{move\+Powerup}!Player@{Player}}
+\subsubsection[{move\+Powerup}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::move\+Powerup (
+\begin{DoxyParamCaption}
+\item[{const double}]{step\+Size, }
+\item[{int}]{prgw, }
+\item[{int}]{prgh}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a0af465a4f6909c99efb995c300957f30}
+Determine the new position of the powerup\textquotesingle{}s two heads. Must be called at each step. \hypertarget{classPlayer_a6ee577d800e047232c03050b673cc668}{}\index{Player@{Player}!react@{react}}
+\index{react@{react}!Player@{Player}}
+\subsubsection[{react}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::react (
+\begin{DoxyParamCaption}
+\item[{Uint8 $\ast$}]{keystate, }
+\item[{int}]{key\+Press\+Delay, }
+\item[{double}]{turn\+Speed, }
+\item[{int}]{bomb\+Max\+Size, }
+\item[{int}]{bomb\+Min\+Size, }
+\item[{int}]{prgw, }
+\item[{int}]{prgh, }
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{s\+Screen, }
+\item[{{\bf Player} $\ast$}]{players\mbox{[}$\,$\mbox{]}, }
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a6ee577d800e047232c03050b673cc668}
+Read the keymap and react to it. This is responsible for turning and launching powerup, bomb or teleport \hypertarget{classPlayer_aea722aeaf4b9238277840ac21aab7a1c}{}\index{Player@{Player}!receive\+Bomb@{receive\+Bomb}}
+\index{receive\+Bomb@{receive\+Bomb}!Player@{Player}}
+\subsubsection[{receive\+Bomb}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::receive\+Bomb (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Rect}]{r\+Bomb, }
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{s\+Bomb}
+\end{DoxyParamCaption}
+)}\label{classPlayer_aea722aeaf4b9238277840ac21aab7a1c}
+This is called when someone else has launched a bomb. Check if we\textquotesingle{}re in the range of that bomb and die if yes. Returns true iff we were killed by that bomb. \hypertarget{classPlayer_aadae68cb1bb79e44da79b3dbdf54ae2c}{}\index{Player@{Player}!reset\+Pts@{reset\+Pts}}
+\index{reset\+Pts@{reset\+Pts}!Player@{Player}}
+\subsubsection[{reset\+Pts}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::reset\+Pts (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_aadae68cb1bb79e44da79b3dbdf54ae2c}
+\hypertarget{classPlayer_ab6c7e79f5678f7b1e0633cea8f1b373f}{}\index{Player@{Player}!set\+Color@{set\+Color}}
+\index{set\+Color@{set\+Color}!Player@{Player}}
+\subsubsection[{set\+Color}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::set\+Color (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Color}]{new\+Color}
+\end{DoxyParamCaption}
+)}\label{classPlayer_ab6c7e79f5678f7b1e0633cea8f1b373f}
+
+
+Setters -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---. 
+
+\hypertarget{classPlayer_a212dbceed395a15bcce9d6028321d39c}{}\index{Player@{Player}!set\+Left\+Key\+Code@{set\+Left\+Key\+Code}}
+\index{set\+Left\+Key\+Code@{set\+Left\+Key\+Code}!Player@{Player}}
+\subsubsection[{set\+Left\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::set\+Left\+Key\+Code (
+\begin{DoxyParamCaption}
+\item[{int}]{new\+Key}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a212dbceed395a15bcce9d6028321d39c}
+\hypertarget{classPlayer_a5a681cb2c03072ca1123ee63db0aabde}{}\index{Player@{Player}!set\+Right\+Key\+Code@{set\+Right\+Key\+Code}}
+\index{set\+Right\+Key\+Code@{set\+Right\+Key\+Code}!Player@{Player}}
+\subsubsection[{set\+Right\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::set\+Right\+Key\+Code (
+\begin{DoxyParamCaption}
+\item[{int}]{new\+Key}
+\end{DoxyParamCaption}
+)}\label{classPlayer_a5a681cb2c03072ca1123ee63db0aabde}
+\hypertarget{classPlayer_ad3e3c485bf4b312224004df1ce885a5e}{}\index{Player@{Player}!start\+Bomb@{start\+Bomb}}
+\index{start\+Bomb@{start\+Bomb}!Player@{Player}}
+\subsubsection[{start\+Bomb}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::start\+Bomb (
+\begin{DoxyParamCaption}
+\item[{int}]{bomb\+Max\+Size, }
+\item[{int}]{bomb\+Min\+Size, }
+\item[{int}]{prgw, }
+\item[{int}]{prgh, }
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{s\+Screen, }
+\item[{{\bf Player} $\ast$}]{players\mbox{[}$\,$\mbox{]}, }
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen}
+\end{DoxyParamCaption}
+)}\label{classPlayer_ad3e3c485bf4b312224004df1ce885a5e}
+Launches bomb and draws it to screen (flips). Finds opponents in range and kills them using \hyperlink{classPlayer_aea722aeaf4b9238277840ac21aab7a1c}{receive\+Bomb()}. For each opponent killed, receive 2 points. \hypertarget{classPlayer_ada7a1aa4cb80f4ef0579165ee2f40462}{}\index{Player@{Player}!start\+Powerup@{start\+Powerup}}
+\index{start\+Powerup@{start\+Powerup}!Player@{Player}}
+\subsubsection[{start\+Powerup}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::start\+Powerup (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_ada7a1aa4cb80f4ef0579165ee2f40462}
+Function for launching the powerup. \hyperlink{classPowerup}{Powerup} starts at the player\textquotesingle{}s current position and goes off to both sides. \hypertarget{classPlayer_ad263fe7e1919ef5af34bc8aa00bb796f}{}\index{Player@{Player}!start\+Teleport@{start\+Teleport}}
+\index{start\+Teleport@{start\+Teleport}!Player@{Player}}
+\subsubsection[{start\+Teleport}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::start\+Teleport (
+\begin{DoxyParamCaption}
+\item[{int}]{prgw, }
+\item[{int}]{prgh, }
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{s\+Screen, }
+\item[{{\bf Game\+Screen} $\ast$}]{game\+Screen}
+\end{DoxyParamCaption}
+)}\label{classPlayer_ad263fe7e1919ef5af34bc8aa00bb796f}
+Launches teleport and writes it to screen, flips it. Draws a survival square of 100 pixels around the target position. \hypertarget{classPlayer_af32c1b07379d1b70fd4d2d654d3fedfe}{}\index{Player@{Player}!toggle\+Enabled@{toggle\+Enabled}}
+\index{toggle\+Enabled@{toggle\+Enabled}!Player@{Player}}
+\subsubsection[{toggle\+Enabled}]{\setlength{\rightskip}{0pt plus 5cm}void Player\+::toggle\+Enabled (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classPlayer_af32c1b07379d1b70fd4d2d654d3fedfe}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classPlayer_af6ac9227d5db4826d9a0fa697681e469}{}\index{Player@{Player}!alive@{alive}}
+\index{alive@{alive}!Player@{Player}}
+\subsubsection[{alive}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::alive\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_af6ac9227d5db4826d9a0fa697681e469}
+
+
+Is the player alive this round? 
+
+\hypertarget{classPlayer_a97cc0b81477c691d1050befc88d57285}{}\index{Player@{Player}!angle@{angle}}
+\index{angle@{angle}!Player@{Player}}
+\subsubsection[{angle}]{\setlength{\rightskip}{0pt plus 5cm}double Player\+::angle\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a97cc0b81477c691d1050befc88d57285}
+
+
+What direction is the player\textquotesingle{}s line currently facing? 
+
+\hypertarget{classPlayer_a48611607e9ae32c375471ce7347f6e21}{}\index{Player@{Player}!bomb\+Avail@{bomb\+Avail}}
+\index{bomb\+Avail@{bomb\+Avail}!Player@{Player}}
+\subsubsection[{bomb\+Avail}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::bomb\+Avail\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a48611607e9ae32c375471ce7347f6e21}
+
+
+Does the player have the right to use the bomb now? 
+
+\hypertarget{classPlayer_ad2ac07f900cc99b0248c36ef083f778f}{}\index{Player@{Player}!color@{color}}
+\index{color@{color}!Player@{Player}}
+\subsubsection[{color}]{\setlength{\rightskip}{0pt plus 5cm}S\+D\+L\+\_\+\+Color Player\+::color\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_ad2ac07f900cc99b0248c36ef083f778f}
+
+
+Color of the player\textquotesingle{}s line. 
+
+\hypertarget{classPlayer_a86ca9b85a70bf78c6109c728f311ca8c}{}\index{Player@{Player}!enabled@{enabled}}
+\index{enabled@{enabled}!Player@{Player}}
+\subsubsection[{enabled}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::enabled\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a86ca9b85a70bf78c6109c728f311ca8c}
+
+
+Does the player exist in the game? 
+
+\hypertarget{classPlayer_a1f4cf1d0ad8148a43a698a548d0d01f7}{}\index{Player@{Player}!hole\+Buffer@{hole\+Buffer}}
+\index{hole\+Buffer@{hole\+Buffer}!Player@{Player}}
+\subsubsection[{hole\+Buffer}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Point}$\ast$ Player\+::hole\+Buffer\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a1f4cf1d0ad8148a43a698a548d0d01f7}
+
+
+Keeps track of points where a hole will be drawn. 
+
+\hypertarget{classPlayer_a51eb1ca4a5ecc06e99501900b8e8b7e8}{}\index{Player@{Player}!hole\+Delay@{hole\+Delay}}
+\index{hole\+Delay@{hole\+Delay}!Player@{Player}}
+\subsubsection[{hole\+Delay}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::hole\+Delay\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a51eb1ca4a5ecc06e99501900b8e8b7e8}
+
+
+Distance to run before new hole is drawn. 
+
+\hypertarget{classPlayer_a9ba2271607df07a07d2454a32fe39f78}{}\index{Player@{Player}!hole\+Size@{hole\+Size}}
+\index{hole\+Size@{hole\+Size}!Player@{Player}}
+\subsubsection[{hole\+Size}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::hole\+Size\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a9ba2271607df07a07d2454a32fe39f78}
+
+
+Size (length) of the holes. 
+
+\hypertarget{classPlayer_a865b251c8ca4efb1aade99949f08aa3e}{}\index{Player@{Player}!left\+Key\+Code@{left\+Key\+Code}}
+\index{left\+Key\+Code@{left\+Key\+Code}!Player@{Player}}
+\subsubsection[{left\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::left\+Key\+Code\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a865b251c8ca4efb1aade99949f08aa3e}
+\hypertarget{classPlayer_a1af72ec313e22fa17c7298b7ddde46ab}{}\index{Player@{Player}!l\+Pressed@{l\+Pressed}}
+\index{l\+Pressed@{l\+Pressed}!Player@{Player}}
+\subsubsection[{l\+Pressed}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::l\+Pressed\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a1af72ec313e22fa17c7298b7ddde46ab}
+\hypertarget{classPlayer_a8f4ab33d4123e6268970d9482f93a335}{}\index{Player@{Player}!pos@{pos}}
+\index{pos@{pos}!Player@{Player}}
+\subsubsection[{pos}]{\setlength{\rightskip}{0pt plus 5cm}S\+D\+L\+\_\+\+Rect Player\+::pos\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a8f4ab33d4123e6268970d9482f93a335}
+
+
+Current position on screen of the head of the line (rounded to closest pixel) 
+
+\hypertarget{classPlayer_ac935cf0ac990dabc5d2bb344c3e9685d}{}\index{Player@{Player}!powerup@{powerup}}
+\index{powerup@{powerup}!Player@{Player}}
+\subsubsection[{powerup}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf Powerup} Player\+::powerup\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_ac935cf0ac990dabc5d2bb344c3e9685d}
+
+
+\hyperlink{classPowerup}{Powerup} of the player. 
+
+\hypertarget{classPlayer_a3b5be83653107f1c320463a6645b5716}{}\index{Player@{Player}!pts@{pts}}
+\index{pts@{pts}!Player@{Player}}
+\subsubsection[{pts}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::pts\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a3b5be83653107f1c320463a6645b5716}
+
+
+How many points did the player collect in this game? 
+
+\hypertarget{classPlayer_a6caf1b82bbc044e0e14ed81f929142ae}{}\index{Player@{Player}!right\+Key\+Code@{right\+Key\+Code}}
+\index{right\+Key\+Code@{right\+Key\+Code}!Player@{Player}}
+\subsubsection[{right\+Key\+Code}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::right\+Key\+Code\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a6caf1b82bbc044e0e14ed81f929142ae}
+
+
+This holds the keymap. 
+
+\hypertarget{classPlayer_a025ccf2fab2797437686a9d4b88147b7}{}\index{Player@{Player}!r\+Pressed@{r\+Pressed}}
+\index{r\+Pressed@{r\+Pressed}!Player@{Player}}
+\subsubsection[{r\+Pressed}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::r\+Pressed\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a025ccf2fab2797437686a9d4b88147b7}
+
+
+This saves the timecode of the moment when the left / right button was pressed (or 0 if it\textquotesingle{}s released right now) 
+
+\hypertarget{classPlayer_ab2eab1f5836b101d675d7e8fe885308d}{}\index{Player@{Player}!steps\+Since\+Last\+Hole@{steps\+Since\+Last\+Hole}}
+\index{steps\+Since\+Last\+Hole@{steps\+Since\+Last\+Hole}!Player@{Player}}
+\subsubsection[{steps\+Since\+Last\+Hole}]{\setlength{\rightskip}{0pt plus 5cm}int Player\+::steps\+Since\+Last\+Hole\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_ab2eab1f5836b101d675d7e8fe885308d}
+
+
+Counter that tells us how far we have gone since the last hole was drawn. Resetted when we have reached hole\+Size + hole\+Delay. 
+
+\hypertarget{classPlayer_ac3a0aaedb90e87c36bbfb19d5092cb7b}{}\index{Player@{Player}!teleport\+Avail@{teleport\+Avail}}
+\index{teleport\+Avail@{teleport\+Avail}!Player@{Player}}
+\subsubsection[{teleport\+Avail}]{\setlength{\rightskip}{0pt plus 5cm}bool Player\+::teleport\+Avail\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_ac3a0aaedb90e87c36bbfb19d5092cb7b}
+
+
+Does the player have the right to use teleport now? 
+
+\hypertarget{classPlayer_a7fe7124fd9eeb4bca23da301b913cdd3}{}\index{Player@{Player}!x\+Double@{x\+Double}}
+\index{x\+Double@{x\+Double}!Player@{Player}}
+\subsubsection[{x\+Double}]{\setlength{\rightskip}{0pt plus 5cm}double Player\+::x\+Double\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a7fe7124fd9eeb4bca23da301b913cdd3}
+\hypertarget{classPlayer_a10fdd50d5dd7c1bb4799f8f40e505a76}{}\index{Player@{Player}!y\+Double@{y\+Double}}
+\index{y\+Double@{y\+Double}!Player@{Player}}
+\subsubsection[{y\+Double}]{\setlength{\rightskip}{0pt plus 5cm}double Player\+::y\+Double\hspace{0.3cm}{\ttfamily [private]}}\label{classPlayer_a10fdd50d5dd7c1bb4799f8f40e505a76}
+
+
+Current real position of the head of the line. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{player_8h}{player.\+h}\item 
+\hyperlink{player_8cpp}{player.\+cpp}\end{DoxyCompactItemize}

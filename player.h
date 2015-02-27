@@ -1,7 +1,7 @@
 /**
    This class holds fields and methods that are used for manipulating the players.
 
-   Copyright 2009-2014 Sandro Kalbermatter
+   Copyright 2009-2015 Sandro Kalbermatter
 
     LICENSE:
     This program is licenced under GPL v3.0, see http://www.gnu.org/licenses/gpl-3.0
@@ -61,22 +61,22 @@ private:
     bool isLeftDown(Uint8 *keystate);
     bool isRightDown(Uint8 *keystate);
 
-    bool enabled; // Does the player exist in the game?
-    bool alive; // Is the player alive this round?
-    int pts; // How many points did the player collect in this game?
-    SDL_Color color; // Color of the player's line
-    double xDouble,yDouble; // Current real position of the head of the line
-    SDL_Rect pos; // Current position on screen of the head of the line (rounded to closest pixel)
-    double angle; // What direction is the player's line currently facing?
-    bool bombAvail; // Does the player have the right to use the bomb now?
-    bool teleportAvail; // Does the player have the right to use teleport now?
-    struct Powerup powerup; // Powerup of the player
-    int leftKeyCode, rightKeyCode; // This holds the keymap
-    int lPressed, rPressed; // This saves the timecode of the moment when the left / right button was pressed (or 0 if it's released right now)
-    Point* holeBuffer; // Keeps track of points where a hole will be drawn.
-    int holeSize; // Size (length) of the holes
-    int holeDelay; // Distance to run before new hole is drawn.
-    int stepsSinceLastHole; // Counter that tells us how far we have gone since the last hole was drawn. Resetted when we have reached holeSize + holeDelay.
+    bool enabled; ///< Does the player exist in the game?
+    bool alive; ///< Is the player alive this round?
+    int pts; ///< How many points did the player collect in this game?
+    SDL_Color color; ///< Color of the player's line
+    double xDouble,yDouble; ///< Current real position of the head of the line
+    SDL_Rect pos; ///< Current position on screen of the head of the line (rounded to closest pixel)
+    double angle; ///< What direction is the player's line currently facing?
+    bool bombAvail; ///< Does the player have the right to use the bomb now?
+    bool teleportAvail; ///< Does the player have the right to use teleport now?
+    struct Powerup powerup; ///< Powerup of the player
+    int leftKeyCode, rightKeyCode; ///< This holds the keymap
+    int lPressed, rPressed; ///< This saves the timecode of the moment when the left / right button was pressed (or 0 if it's released right now)
+    Point* holeBuffer; ///< Keeps track of points where a hole will be drawn.
+    int holeSize; ///< Size (length) of the holes
+    int holeDelay; ///< Distance to run before new hole is drawn.
+    int stepsSinceLastHole; ///< Counter that tells us how far we have gone since the last hole was drawn. Resetted when we have reached holeSize + holeDelay.
 };
 
 #endif // PLAYER_H

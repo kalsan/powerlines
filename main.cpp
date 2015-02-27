@@ -1,6 +1,6 @@
 /**
   Version 2-2
-  Copyright 2009-2014 Sandro Kalbermatter
+  Copyright 2009-2015 Sandro Kalbermatter
 
   LICENSE:
   This program is licenced under GPL v3.0, see http://www.gnu.org/licenses/gpl-3.0
@@ -509,6 +509,7 @@ int main()
                 if(status==PLAY){
                     // Analyze keystate and react to it
                     Uint8 *keystate=SDL_GetKeyState(NULL);
+                    SDL_PumpEvents();
                     for(int i=0;i<10;i++){
                         players[i]->react(keystate,keyPressDelay,turnSpeed,bombMaxSize,bombMinSize,prgw,prgh,sScreen,players,gameScreen);
                     }

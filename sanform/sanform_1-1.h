@@ -1,6 +1,6 @@
 /**
 Sanform 1-1     MODIFIED FOR POWERLINES 2-3
-Copyright 2010-2014 Sandro Kalbermatter
+Copyright 2010-2015 Sandro Kalbermatter
 Lib dependencies: SDL, SDL_Image, SDL_Text
 File dependencies: sanform_1-1.cpp , sanform_1-1.h , biondi.ttf
 

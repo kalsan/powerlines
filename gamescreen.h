@@ -2,7 +2,7 @@
    This class allows to simultaneously draw to screen and register to evilPixels.
    It takes care of the management of any "dangerous" object on the screen during the game.
 
-   Copyright 2009-2014 Sandro Kalbermatter
+   Copyright 2009-2015 Sandro Kalbermatter
 
     LICENSE:
     This program is licenced under GPL v3.0, see http://www.gnu.org/licenses/gpl-3.0
@@ -34,12 +34,12 @@ public: // See .cpp file for comments about these functions.
     void debug_drawEvilPixels();
 
 private:
-    int prgw; // Stores the width of the window
-    int prgh; // Stores the height of the window
-    SDL_Surface *sScreen; // Stores SDL_Surface to which we draw
-    bool* evilPixels; // Datastructure used for collision detection. This has one entry for each pixel on the screen.
-                      // If a player lands on a pixel where evilPixels is true, a collision is caused and the player dies.
-                      // Order: height * prgw + width (left-to-right, top-to-bottom)
+    int prgw; ///< Stores the width of the window
+    int prgh; ///< Stores the height of the window
+    SDL_Surface *sScreen; ///< Stores SDL_Surface to which we draw
+    bool* evilPixels; ///< Datastructure used for collision detection. This has one entry for each pixel on the screen.
+                      ///< If a player lands on a pixel where evilPixels is true, a collision is caused and the player dies.
+                      ///< Order: height * prgw + width (left-to-right, top-to-bottom)
 };
 
 #endif // GAMESCREEN_H

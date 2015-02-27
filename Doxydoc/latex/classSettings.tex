@@ -1,0 +1,169 @@
+\hypertarget{classSettings}{}\section{Settings Class Reference}
+\label{classSettings}\index{Settings@{Settings}}
+
+
+{\ttfamily \#include $<$settings.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classSettings_ab7b5df0aa5e63fcc91b1e28143e35eef}{Settings} (std\+::string new\+File\+Name)
+\item 
+\hyperlink{classSettings_a4a65be5921dfc9fddc476e5320541d89}{$\sim$\+Settings} ()
+\item 
+void \hyperlink{classSettings_aee6c7f37b5ffe69a7b605cd656202c3d}{add\+Setting} (std\+::string id, std\+::string descr, int default\+Value)
+\item 
+void \hyperlink{classSettings_a2ed21ce3e76ab2c34ac8684c26ae951f}{set} (std\+::string id, int value)
+\item 
+int \hyperlink{classSettings_ae2aff237502f56739fff3d664cb0fa99}{get} (std\+::string id)
+\item 
+void \hyperlink{classSettings_a8976b08faf595d3da853e59d4f79e45d}{reset} (std\+::string id)
+\item 
+void \hyperlink{classSettings_a921ad66038065757097cb9d199bedde9}{reset\+All} ()
+\item 
+int \hyperlink{classSettings_a279cf292787918f777bc43f201a14a99}{load} (bool fix)
+\item 
+int \hyperlink{classSettings_a2042818d2c6767f73c5c4e9eeac23b61}{load} ()
+\item 
+int \hyperlink{classSettings_a8bfa41f6c8f6eb48d116f96115d9793d}{load\+No\+Fix} ()
+\item 
+int \hyperlink{classSettings_ab017f1e06b354b016ade4f17637397be}{save} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structSetting}{Setting} $\ast$ \hyperlink{classSettings_a2b56d0b78408481c275da23598a7d77d}{find} (std\+::string id)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::list$<$ \hyperlink{structSetting}{Setting} $\ast$ $>$ \hyperlink{classSettings_a6371e3d3a715453892bcf4bfb42105a8}{settings}
+\begin{DoxyCompactList}\small\item\em This list contains the actual settings. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classSettings_a73ce89f483dbf7f218871299c16d00f9}{file\+Name}
+\begin{DoxyCompactList}\small\item\em Name of the file we store the settings into / of which we read the settings from. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classSettings_ab7b5df0aa5e63fcc91b1e28143e35eef}{}\index{Settings@{Settings}!Settings@{Settings}}
+\index{Settings@{Settings}!Settings@{Settings}}
+\subsubsection[{Settings}]{\setlength{\rightskip}{0pt plus 5cm}Settings\+::\+Settings (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{new\+File\+Name}
+\end{DoxyParamCaption}
+)}\label{classSettings_ab7b5df0aa5e63fcc91b1e28143e35eef}
+Copyright 2014 Sandro Kalbermatter License\+: G\+P\+L v3
+
+This class provides a simple interface for dealing with settings.
+
+First, a \hyperlink{classSettings}{Settings} object must be created, specifying a file name. If you create multiple such objects, you\textquotesingle{}re dealing with completely independent settings sets, using different files. Second, all settings to be taken care of must be made known by calling add\+Setting. You must provide\+: -\/ an identifier string, e.\+g. \char`\"{}gen\+Font\+Size\char`\"{},
+\begin{DoxyItemize}
+\item a description that will be written to the settings file, e.\+g. \char`\"{}\+Set Generel Font Size here.\char`\"{}
+\item a default integer value used for initializing the setting, when resetting it, or when we fail loading it from the file. e.\+g. 12 To deal with the value of a setting, use \hyperlink{classSettings_a2ed21ce3e76ab2c34ac8684c26ae951f}{set()}, \hyperlink{classSettings_a8976b08faf595d3da853e59d4f79e45d}{reset()} and \hyperlink{classSettings_ae2aff237502f56739fff3d664cb0fa99}{get()}, specifying the setting\textquotesingle{}s identifier. To reset all values to their default, use \hyperlink{classSettings_a921ad66038065757097cb9d199bedde9}{reset\+All()}. To read / write all the settings handled by your \hyperlink{structSetting}{Setting} object from / to disk, use \hyperlink{classSettings_a2042818d2c6767f73c5c4e9eeac23b61}{load()} / \hyperlink{classSettings_ab017f1e06b354b016ade4f17637397be}{save()}. If you want to avoid that missing lines are automatically appended to the file, use \hyperlink{classSettings_a8bfa41f6c8f6eb48d116f96115d9793d}{load\+No\+Fix()}.
+\end{DoxyItemize}
+
+Have fun! Constructor \hypertarget{classSettings_a4a65be5921dfc9fddc476e5320541d89}{}\index{Settings@{Settings}!````~Settings@{$\sim$\+Settings}}
+\index{````~Settings@{$\sim$\+Settings}!Settings@{Settings}}
+\subsubsection[{$\sim$\+Settings}]{\setlength{\rightskip}{0pt plus 5cm}Settings\+::$\sim$\+Settings (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classSettings_a4a65be5921dfc9fddc476e5320541d89}
+Destructor 
+
+\subsection{Member Function Documentation}
+\hypertarget{classSettings_aee6c7f37b5ffe69a7b605cd656202c3d}{}\index{Settings@{Settings}!add\+Setting@{add\+Setting}}
+\index{add\+Setting@{add\+Setting}!Settings@{Settings}}
+\subsubsection[{add\+Setting}]{\setlength{\rightskip}{0pt plus 5cm}void Settings\+::add\+Setting (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{id, }
+\item[{std\+::string}]{descr, }
+\item[{int}]{default\+Value}
+\end{DoxyParamCaption}
+)}\label{classSettings_aee6c7f37b5ffe69a7b605cd656202c3d}
+This makes a setting being known to the program. It can then be used. You may N\+O\+T access a setting that hasn\textquotesingle{}t been added before by this function! \hypertarget{classSettings_a2b56d0b78408481c275da23598a7d77d}{}\index{Settings@{Settings}!find@{find}}
+\index{find@{find}!Settings@{Settings}}
+\subsubsection[{find}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Setting} $\ast$ Settings\+::find (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\label{classSettings_a2b56d0b78408481c275da23598a7d77d}
+Search an id in all settings added by add\+Setting If not found, returns N\+U\+L\+L. This is a private function. \hypertarget{classSettings_ae2aff237502f56739fff3d664cb0fa99}{}\index{Settings@{Settings}!get@{get}}
+\index{get@{get}!Settings@{Settings}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}int Settings\+::get (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{id}
+\end{DoxyParamCaption}
+)}\label{classSettings_ae2aff237502f56739fff3d664cb0fa99}
+Read value of a single setting. The setting must have been added by add\+Setting before. Returns value defined by this setting. \hypertarget{classSettings_a279cf292787918f777bc43f201a14a99}{}\index{Settings@{Settings}!load@{load}}
+\index{load@{load}!Settings@{Settings}}
+\subsubsection[{load}]{\setlength{\rightskip}{0pt plus 5cm}int Settings\+::load (
+\begin{DoxyParamCaption}
+\item[{bool}]{fix}
+\end{DoxyParamCaption}
+)}\label{classSettings_a279cf292787918f777bc43f201a14a99}
+Open the file at \textquotesingle{}file\+Name\textquotesingle{} and load its known settings. If \textquotesingle{}fix\textquotesingle{} is true, append any settings that were added by add\+Setting but which are not in the file. Note that fix will not remove anything from the settings file. Returns 0 on success. \hypertarget{classSettings_a2042818d2c6767f73c5c4e9eeac23b61}{}\index{Settings@{Settings}!load@{load}}
+\index{load@{load}!Settings@{Settings}}
+\subsubsection[{load}]{\setlength{\rightskip}{0pt plus 5cm}int Settings\+::load (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classSettings_a2042818d2c6767f73c5c4e9eeac23b61}
+Open the file at \textquotesingle{}file\+Name\textquotesingle{} and load its known settings. Append any settings that were added by add\+Setting but which are not in the file. Returns 0 on success. \hypertarget{classSettings_a8bfa41f6c8f6eb48d116f96115d9793d}{}\index{Settings@{Settings}!load\+No\+Fix@{load\+No\+Fix}}
+\index{load\+No\+Fix@{load\+No\+Fix}!Settings@{Settings}}
+\subsubsection[{load\+No\+Fix}]{\setlength{\rightskip}{0pt plus 5cm}int Settings\+::load\+No\+Fix (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classSettings_a8bfa41f6c8f6eb48d116f96115d9793d}
+Open the file at \textquotesingle{}file\+Name\textquotesingle{} and load its known settings. Will read from the file but not write to it, unless the settings file dos not exist, in which case this function behaves like \hyperlink{classSettings_a2042818d2c6767f73c5c4e9eeac23b61}{load()} Returns 0 on success. \hypertarget{classSettings_a8976b08faf595d3da853e59d4f79e45d}{}\index{Settings@{Settings}!reset@{reset}}
+\index{reset@{reset}!Settings@{Settings}}
+\subsubsection[{reset}]{\setlength{\rightskip}{0pt plus 5cm}void Settings\+::reset (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{id}
+\end{DoxyParamCaption}
+)}\label{classSettings_a8976b08faf595d3da853e59d4f79e45d}
+Reset a setting to its default value The setting must have been added by add\+Setting before. \hypertarget{classSettings_a921ad66038065757097cb9d199bedde9}{}\index{Settings@{Settings}!reset\+All@{reset\+All}}
+\index{reset\+All@{reset\+All}!Settings@{Settings}}
+\subsubsection[{reset\+All}]{\setlength{\rightskip}{0pt plus 5cm}void Settings\+::reset\+All (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classSettings_a921ad66038065757097cb9d199bedde9}
+Reset all settings in this \hyperlink{classSettings}{Settings} object \hypertarget{classSettings_ab017f1e06b354b016ade4f17637397be}{}\index{Settings@{Settings}!save@{save}}
+\index{save@{save}!Settings@{Settings}}
+\subsubsection[{save}]{\setlength{\rightskip}{0pt plus 5cm}int Settings\+::save (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classSettings_ab017f1e06b354b016ade4f17637397be}
+Overwrite the file at \textquotesingle{}file\+Name\textquotesingle{} and store all settings added by add\+Setting Returns 0 on success. \hypertarget{classSettings_a2ed21ce3e76ab2c34ac8684c26ae951f}{}\index{Settings@{Settings}!set@{set}}
+\index{set@{set}!Settings@{Settings}}
+\subsubsection[{set}]{\setlength{\rightskip}{0pt plus 5cm}void Settings\+::set (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{id, }
+\item[{int}]{value}
+\end{DoxyParamCaption}
+)}\label{classSettings_a2ed21ce3e76ab2c34ac8684c26ae951f}
+Set value of a single setting. The setting must have been added by add\+Setting before. 
+
+\subsection{Member Data Documentation}
+\hypertarget{classSettings_a73ce89f483dbf7f218871299c16d00f9}{}\index{Settings@{Settings}!file\+Name@{file\+Name}}
+\index{file\+Name@{file\+Name}!Settings@{Settings}}
+\subsubsection[{file\+Name}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Settings\+::file\+Name\hspace{0.3cm}{\ttfamily [private]}}\label{classSettings_a73ce89f483dbf7f218871299c16d00f9}
+
+
+Name of the file we store the settings into / of which we read the settings from. 
+
+\hypertarget{classSettings_a6371e3d3a715453892bcf4bfb42105a8}{}\index{Settings@{Settings}!settings@{settings}}
+\index{settings@{settings}!Settings@{Settings}}
+\subsubsection[{settings}]{\setlength{\rightskip}{0pt plus 5cm}std\+::list$<${\bf Setting}$\ast$$>$ Settings\+::settings\hspace{0.3cm}{\ttfamily [private]}}\label{classSettings_a6371e3d3a715453892bcf4bfb42105a8}
+
+
+This list contains the actual settings. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{settings_8h}{settings.\+h}\item 
+\hyperlink{settings_8cpp}{settings.\+cpp}\end{DoxyCompactItemize}

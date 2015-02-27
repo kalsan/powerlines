@@ -1,0 +1,157 @@
+\hypertarget{main_8cpp}{}\section{main.\+cpp File Reference}
+\label{main_8cpp}\index{main.\+cpp@{main.\+cpp}}
+{\ttfamily \#include $<$cstdlib$>$}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$S\+D\+L/\+S\+D\+L.\+h$>$}\\*
+{\ttfamily \#include $<$S\+D\+L/\+S\+D\+L\+\_\+ttf.\+h$>$}\\*
+{\ttfamily \#include $<$S\+D\+L/\+S\+D\+L\+\_\+image.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}sanform/sanform\+\_\+1-\/1.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}settings.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}player.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}gamescreen.\+h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structPlayerpts}{Playerpts}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structPlayerpts}{Playerpts} \hyperlink{main_8cpp_a8723836f1588e4cee2eafcf262408dec}{Playerpts}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{main_8cpp_a96c7f2045a49baaabbf388daf3d13dd9}{options} (S\+D\+L\+\_\+\+Surface $\ast$screen, \hyperlink{classSettings}{Settings} $\ast$settings)
+\item 
+bool \hyperlink{main_8cpp_a749a27e4ab105c97e7f02f939aa6a700}{is\+Click\+In\+Rect} (S\+D\+L\+\_\+\+Event event, int x0, int y0, int x1, int y1)
+\item 
+int \hyperlink{main_8cpp_a46f5a7c0c8f99e84deeb1fc02d8436cc}{check\+Go} (\hyperlink{classPlayer}{Player} $\ast$$\ast$players)
+\item 
+void \hyperlink{main_8cpp_a23e600acbdccbf7a177c312ed0c503c0}{my\+Draw\+Fill\+Rect} (S\+D\+L\+\_\+\+Surface $\ast$super, int x, int y, int w, int h, Uint32 color)
+\item 
+int \hyperlink{main_8cpp_a2d62196c7c1f65f176df22608c274a5f}{bool\+Scanf} (const char $\ast$instring, const char $\ast$format, bool $\ast$target)
+\item 
+int \hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const int \hyperlink{main_8cpp_a3c79e56b9d4bf4d237126712c50df6d4}{amount\+Handicaps} =25
+\item 
+const int \hyperlink{main_8cpp_a7af15b9cdc41ca984f18113cdea6b134}{key\+Press\+Delay} =200
+\item 
+const int \hyperlink{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{prgw} =739
+\item 
+const int \hyperlink{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{prgh} =555
+\item 
+const int \hyperlink{main_8cpp_a15baba2ec1793f49b8f825b4be29ea55}{hole\+Delay} =30
+\item 
+const int \hyperlink{main_8cpp_a25fd0022d04d76c102837061a5b7e563}{hole\+Size} =5
+\item 
+const double \hyperlink{main_8cpp_a481daf4312d87ec4697e82227394536c}{turn\+Speed} =0.\+1
+\item 
+const double \hyperlink{main_8cpp_a707dc5532cee7444ea37a95fdf2bd851}{step\+Size} =3
+\item 
+const int \hyperlink{main_8cpp_affaabf8fc47a7dd9262d94ed15876bea}{bomb\+Max\+Size} =150
+\item 
+const int \hyperlink{main_8cpp_a977983348b076a15b137a0f4c8340312}{bomb\+Min\+Size} =60
+\end{DoxyCompactItemize}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{main_8cpp_a8723836f1588e4cee2eafcf262408dec}{}\index{main.\+cpp@{main.\+cpp}!Playerpts@{Playerpts}}
+\index{Playerpts@{Playerpts}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{Playerpts}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Playerpts}  {\bf Playerpts}}\label{main_8cpp_a8723836f1588e4cee2eafcf262408dec}
+
+
+\subsection{Function Documentation}
+\hypertarget{main_8cpp_a2d62196c7c1f65f176df22608c274a5f}{}\index{main.\+cpp@{main.\+cpp}!bool\+Scanf@{bool\+Scanf}}
+\index{bool\+Scanf@{bool\+Scanf}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{bool\+Scanf}]{\setlength{\rightskip}{0pt plus 5cm}int bool\+Scanf (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{instring, }
+\item[{const char $\ast$}]{format, }
+\item[{bool $\ast$}]{target}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a2d62196c7c1f65f176df22608c274a5f}
+This function works like a sscanf for exaclty one bool variable It\textquotesingle{}s a rather ugly and lazy but very convenient of sscanf not supporting bool. \hypertarget{main_8cpp_a46f5a7c0c8f99e84deeb1fc02d8436cc}{}\index{main.\+cpp@{main.\+cpp}!check\+Go@{check\+Go}}
+\index{check\+Go@{check\+Go}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{check\+Go}]{\setlength{\rightskip}{0pt plus 5cm}int check\+Go (
+\begin{DoxyParamCaption}
+\item[{{\bf Player} $\ast$$\ast$}]{players}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a46f5a7c0c8f99e84deeb1fc02d8436cc}
+This function ensures that there is a valid set of players for the game. Yes\+: returns true, No\+: Suggests a corrected set. \hypertarget{main_8cpp_a749a27e4ab105c97e7f02f939aa6a700}{}\index{main.\+cpp@{main.\+cpp}!is\+Click\+In\+Rect@{is\+Click\+In\+Rect}}
+\index{is\+Click\+In\+Rect@{is\+Click\+In\+Rect}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{is\+Click\+In\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}bool is\+Click\+In\+Rect (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Event}]{event, }
+\item[{int}]{x0, }
+\item[{int}]{y0, }
+\item[{int}]{x1, }
+\item[{int}]{y1}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a749a27e4ab105c97e7f02f939aa6a700}
+Returns true iff a click has been made within these screen coordinates \hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{}\index{main.\+cpp@{main.\+cpp}!main@{main}}
+\index{main@{main}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}
+\hypertarget{main_8cpp_a23e600acbdccbf7a177c312ed0c503c0}{}\index{main.\+cpp@{main.\+cpp}!my\+Draw\+Fill\+Rect@{my\+Draw\+Fill\+Rect}}
+\index{my\+Draw\+Fill\+Rect@{my\+Draw\+Fill\+Rect}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{my\+Draw\+Fill\+Rect}]{\setlength{\rightskip}{0pt plus 5cm}void my\+Draw\+Fill\+Rect (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{super, }
+\item[{int}]{x, }
+\item[{int}]{y, }
+\item[{int}]{w, }
+\item[{int}]{h, }
+\item[{Uint32}]{color}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a23e600acbdccbf7a177c312ed0c503c0}
+This function works exactly like draw\+Fill\+Rect, but it seems to be faster \hypertarget{main_8cpp_a96c7f2045a49baaabbf388daf3d13dd9}{}\index{main.\+cpp@{main.\+cpp}!options@{options}}
+\index{options@{options}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{options}]{\setlength{\rightskip}{0pt plus 5cm}int options (
+\begin{DoxyParamCaption}
+\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{screen, }
+\item[{{\bf Settings} $\ast$}]{settings}
+\end{DoxyParamCaption}
+)}\label{main_8cpp_a96c7f2045a49baaabbf388daf3d13dd9}
+This is a function that displays the option menu. 
+
+\subsection{Variable Documentation}
+\hypertarget{main_8cpp_a3c79e56b9d4bf4d237126712c50df6d4}{}\index{main.\+cpp@{main.\+cpp}!amount\+Handicaps@{amount\+Handicaps}}
+\index{amount\+Handicaps@{amount\+Handicaps}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{amount\+Handicaps}]{\setlength{\rightskip}{0pt plus 5cm}const int amount\+Handicaps =25}\label{main_8cpp_a3c79e56b9d4bf4d237126712c50df6d4}
+\hypertarget{main_8cpp_affaabf8fc47a7dd9262d94ed15876bea}{}\index{main.\+cpp@{main.\+cpp}!bomb\+Max\+Size@{bomb\+Max\+Size}}
+\index{bomb\+Max\+Size@{bomb\+Max\+Size}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{bomb\+Max\+Size}]{\setlength{\rightskip}{0pt plus 5cm}const int bomb\+Max\+Size =150}\label{main_8cpp_affaabf8fc47a7dd9262d94ed15876bea}
+\hypertarget{main_8cpp_a977983348b076a15b137a0f4c8340312}{}\index{main.\+cpp@{main.\+cpp}!bomb\+Min\+Size@{bomb\+Min\+Size}}
+\index{bomb\+Min\+Size@{bomb\+Min\+Size}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{bomb\+Min\+Size}]{\setlength{\rightskip}{0pt plus 5cm}const int bomb\+Min\+Size =60}\label{main_8cpp_a977983348b076a15b137a0f4c8340312}
+\hypertarget{main_8cpp_a15baba2ec1793f49b8f825b4be29ea55}{}\index{main.\+cpp@{main.\+cpp}!hole\+Delay@{hole\+Delay}}
+\index{hole\+Delay@{hole\+Delay}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{hole\+Delay}]{\setlength{\rightskip}{0pt plus 5cm}const int hole\+Delay =30}\label{main_8cpp_a15baba2ec1793f49b8f825b4be29ea55}
+\hypertarget{main_8cpp_a25fd0022d04d76c102837061a5b7e563}{}\index{main.\+cpp@{main.\+cpp}!hole\+Size@{hole\+Size}}
+\index{hole\+Size@{hole\+Size}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{hole\+Size}]{\setlength{\rightskip}{0pt plus 5cm}const int hole\+Size =5}\label{main_8cpp_a25fd0022d04d76c102837061a5b7e563}
+\hypertarget{main_8cpp_a7af15b9cdc41ca984f18113cdea6b134}{}\index{main.\+cpp@{main.\+cpp}!key\+Press\+Delay@{key\+Press\+Delay}}
+\index{key\+Press\+Delay@{key\+Press\+Delay}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{key\+Press\+Delay}]{\setlength{\rightskip}{0pt plus 5cm}const int key\+Press\+Delay =200}\label{main_8cpp_a7af15b9cdc41ca984f18113cdea6b134}
+\hypertarget{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}{}\index{main.\+cpp@{main.\+cpp}!prgh@{prgh}}
+\index{prgh@{prgh}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{prgh}]{\setlength{\rightskip}{0pt plus 5cm}const int prgh =555}\label{main_8cpp_a16fb66a2b03f119d60e570f8bf24570e}
+\hypertarget{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}{}\index{main.\+cpp@{main.\+cpp}!prgw@{prgw}}
+\index{prgw@{prgw}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{prgw}]{\setlength{\rightskip}{0pt plus 5cm}const int prgw =739}\label{main_8cpp_ad1e84142b0bcc502ca72ba239e8b7712}
+\hypertarget{main_8cpp_a707dc5532cee7444ea37a95fdf2bd851}{}\index{main.\+cpp@{main.\+cpp}!step\+Size@{step\+Size}}
+\index{step\+Size@{step\+Size}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{step\+Size}]{\setlength{\rightskip}{0pt plus 5cm}const double step\+Size =3}\label{main_8cpp_a707dc5532cee7444ea37a95fdf2bd851}
+\hypertarget{main_8cpp_a481daf4312d87ec4697e82227394536c}{}\index{main.\+cpp@{main.\+cpp}!turn\+Speed@{turn\+Speed}}
+\index{turn\+Speed@{turn\+Speed}!main.\+cpp@{main.\+cpp}}
+\subsubsection[{turn\+Speed}]{\setlength{\rightskip}{0pt plus 5cm}const double turn\+Speed =0.\+1}\label{main_8cpp_a481daf4312d87ec4697e82227394536c}
